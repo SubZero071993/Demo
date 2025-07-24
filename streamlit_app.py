@@ -93,7 +93,7 @@ links = {
     "Cios Alpha": ["https://example.com/brochure_alpha.pdf", "https://example.com/config_alpha.pdf"],
     "Cios Spin": ["https://example.com/brochure_spin.pdf", "https://example.com/config_spin.pdf"],
     "Cios Select": ["https://example.com/brochure_select.pdf", "https://example.com/config_select.pdf"],
-    "Cios Fit": ["https://example.com/brochure_fit.pdf", "https://example.com/config_fit.pdf"],
+    "Cios Fit": ["https://example.com/brochure_fit.pdf", "https://pdf.ac/3u7Xrl"],
     "Cios Fusion": ["https://example.com/brochure_fusion.pdf", "https://example.com/config_fusion.pdf"],
     "Cios Connect": ["https://example.com/brochure_connect.pdf", "https://example.com/config_connect.pdf"],
 }
