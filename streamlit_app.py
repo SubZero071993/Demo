@@ -1,142 +1,124 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime
-from io import StringIO
+from datetime import datetime, date
+import smtplib
+from email.mime.text import MIMEText
+import base64
 
-# --- تحميل البيانات الأساسية ---
+st.set_page_config(layout="wide")
+
+# شعار سيمنس
+st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=200)
+
+st.title("C-arm Demo Tracker - Siemens Healthineers")
+
+# البيانات الأساسية
 data = {
     "Demo C-arm Model": [
         "Cios Select FD VA20", "Cios Connect", "Cios Fusion",
         "Cios Alpha VA20", "Cios Alpha VA30", "Cios Spin VA30"
     ],
     "Delivery Date": [
-        "22-07-25", "25-05-25", "26-05-25",
-        "13-06-25", "20-07-25", "10-07-25"
+        "22-07-25", "25-06-25", "25-05-25",
+        "30-05-25", "19-06-25", "10-07-25"
     ],
     "Serial #": [
-        300087, 21581, 21584, 13002, 13222, 50097
+        20087, 21181, 21581,
+        13002, 13095, 50097
     ],
     "Current Location": [
-        "warehouse", "Al-Rawdah Hospital (until we submit Cios Select)",
-        "Al-Salam Health Hospital", "Al-Hayyat Hospital (until they receive their C-arm)",
-        "Aster Sanad Hospital", "Johns Hopkins Aramco Hospital"
+        "warehouse", "Al-Rawdah Hospital (until we submit Cios Select)", "Al-Salam Health Hospital",
+        "Al-Hayat Hospital (until they receive their c-arm)", "Aster Sanad Hospital", "Johns Hopkins Aramco Hospital"
     ],
     "Account Manager": [
         "Ayman Tamimi", "Mohammad Ghariebh", "Mohammad Ghariebh",
         "Ammar", "Ammar", "Ayman Tamimi"
     ],
     "Application Specialist": [
-        "", "", "Ali", "", "", "Ali"
+        "", "", "Ali",
+        "", "", "Ali"
     ],
-    "Device Fault": [
-        False, False, False, False, False, False
+    "Device Faulty (🔧)": [
+        False, False, False,
+        False, False, False
     ]
 }
 
+# تحويل التاريخ وحساب عدد الأيام
 df = pd.DataFrame(data)
 df["Delivery Date"] = pd.to_datetime(df["Delivery Date"], format="%d-%m-%y")
+today = pd.to_datetime(date.today())
 
-# --- حساب الأيام في الموقع (مع استثناء المستودع) ---
-today = pd.to_datetime(datetime.today().date())
-df["Days in Location"] = df.apply(
-    lambda row: (today - row["Delivery Date"]).days if "warehouse" not in row["Current Location"].lower() else 0,
-    axis=1
-)
+def calculate_days(row):
+    if row["Current Location"].strip().lower() == "warehouse":
+        return 0
+    return (today - row["Delivery Date"]).days
 
-# --- إعداد الصفحة ---
-st.set_page_config(layout="wide")
-st.markdown("""
-    <style>
-        .block-container {
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-        }
-    </style>
-""", unsafe_allow_html=True)
+df["Days in Location"] = df.apply(calculate_days, axis=1)
 
-# --- شعار سيمنس ---
-st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Siemens_Healthineers_logo.svg/2560px-Siemens_Healthineers_logo.svg.png", width=300)
-
-st.title("C-arm Device Tracker")
-
-# --- عرض وتعديل الجدول ---
-edited_df = st.data_editor(
-    df,
-    num_rows="dynamic",
-    use_container_width=True,
-    column_config={
-        "Account Manager": st.column_config.SelectboxColumn(
-            "Account Manager",
-            help="Choose the AM",
-            options=df["Account Manager"].unique().tolist()
-        ),
-        "Device Fault": st.column_config.CheckboxColumn("🔧 Fault")
-    },
-    hide_index=True,
-    key="carm_editor"
-)
-
-# --- تظليل الصف إذا فيه عطل ---
-def highlight_fault(row):
-    if row["Device Fault"]:
-        return ["background-color: #ffe6e6"] * len(row)
-    return [""] * len(row)
-
-st.dataframe(
-    edited_df.style.apply(highlight_fault, axis=1),
-    use_container_width=True
-)
-
-# --- روابط البروشور والكونفقريشن ---
-st.subheader("📎 Brochure & Configuration Links")
-links = {
-    "Cios Alpha": ["https://example.com/brochure_alpha.pdf", "https://example.com/config_alpha.pdf"],
-    "Cios Spin": ["https://example.com/brochure_spin.pdf", "https://example.com/config_spin.pdf"],
-    "Cios Select": ["https://example.com/brochure_select.pdf", "https://example.com/config_select.pdf"],
-    "Cios Fit": ["https://example.com/brochure_fit.pdf", "https://pdf.ac/3u7Xrl"],
-    "Cios Fusion": ["https://example.com/brochure_fusion.pdf", "https://example.com/config_fusion.pdf"],
-    "Cios Connect": ["https://example.com/brochure_connect.pdf", "https://example.com/config_connect.pdf"],
+# روابط البروشور والكونفيقريشن
+brochure_links = {
+    "Cios Select FD VA20": ("https://example.com/select_brochure", "https://example.com/select_config"),
+    "Cios Connect": ("https://example.com/connect_brochure", "https://example.com/connect_config"),
+    "Cios Fusion": ("https://example.com/fusion_brochure", "https://example.com/fusion_config"),
+    "Cios Alpha VA20": ("https://example.com/alpha20_brochure", "https://example.com/alpha20_config"),
+    "Cios Alpha VA30": ("https://example.com/alpha30_brochure", "https://example.com/alpha30_config"),
+    "Cios Spin VA30": ("https://example.com/spin_brochure", "https://example.com/spin_config")
 }
 
-for model, (brochure, config) in links.items():
-    st.markdown(f"**{model}** – [📄 Brochure]({brochure}) | [🛠️ Config]({config})")
+# حفظ التعديلات في سيشن
+if "df" not in st.session_state:
+    st.session_state.df = df
 
-# --- إرسال إشعار عبر البريد إذا تجاوز الجهاز أسبوعين ---
-import smtplib
-from email.mime.text import MIMEText
+edited_df = st.data_editor(
+    st.session_state.df,
+    num_rows="dynamic",
+    use_container_width=True,
+    key="editable_table"
+)
 
-st.subheader("📬 Send Notification for Devices > 14 Days (excluding warehouse)")
+# تظليل الصف إذا فيه عطل
+def style_row(row):
+    if row["Device Faulty (🔧)"]:
+        return ["background-color: #ffe6e6"] * len(row)
+    else:
+        return [""] * len(row)
 
-for index, row in edited_df.iterrows():
-    if row["Days in Location"] > 14 and "warehouse" not in row["Current Location"].lower():
-        if st.button(f"Notify {row['Account Manager']} about {row['Demo C-arm Model']}", key=index):
-            recipient = "fake.email@siemens-healthineers.com"  # ← غيّرها لإيميل مدير الحساب
-            subject = f"Device {row['Demo C-arm Model']} has been at {row['Current Location']} for over 14 days"
+st.markdown("### 🔧 Brochure & Configuration Links")
+for model in df["Demo C-arm Model"]:
+    brochure, config = brochure_links.get(model, ("#", "#"))
+    st.markdown(f"- **{model}** — [📄 Brochure]({brochure}) | [🛠 Config]({config})")
+
+# زر إرسال إيميل تنبيه
+st.markdown("---")
+st.markdown("### 📬 Send Email Notification to Account Managers")
+
+for i, row in edited_df.iterrows():
+    if row["Days in Location"] > 14 and row["Current Location"].strip().lower() != "warehouse":
+        if st.button(f"Send Reminder to {row['Account Manager']}", key=f"email_{i}"):
+            # إعداد الإيميل (إيميل وهمي للتجربة، غيّره لاحقًا)
+            sender_email = "demo@example.com"
+            recipient_email = f"{row['Account Manager'].replace(' ', '').lower()}@example.com"
+            subject = f"Reminder: {row['Demo C-arm Model']} device has exceeded 14 days"
             body = f"""Dear {row['Account Manager']},
 
-This is an automated reminder that the C-arm device **{row['Demo C-arm Model']}** (Serial: {row['Serial #']}) has been at **{row['Current Location']}** for **{row['Days in Location']} days**.
+The demo unit **{row['Demo C-arm Model']}** (Serial: {row['Serial #']}) has been in location "**{row['Current Location']}**" for **{row['Days in Location']}** days.
 
-Please take the necessary action.
+Please take the necessary action as per the demo policy.
 
-Best regards,
-Demo Tracking System"""
+Best regards, 
+C-arm Demo Tracker – Siemens Healthineers
+"""
+            msg = MIMEText(body)
+            msg["Subject"] = subject
+            msg["From"] = sender_email
+            msg["To"] = recipient_email
 
             try:
-                msg = MIMEText(body)
-                msg["Subject"] = subject
-                msg["From"] = "demo-tracker@yourdomain.com"
-                msg["To"] = recipient
-
-                smtp_server = "smtp.yourdomain.com"  # ← غيّر هذا بناءً على نظام شركتك
-                smtp_port = 587
-                smtp_user = "demo-tracker@yourdomain.com"
-                smtp_password = "yourpassword"  # مو مطلوب حالياً
-
-                with smtplib.SMTP(smtp_server, smtp_port) as server:
+                with smtplib.SMTP("smtp.office365.com", 587) as server:
                     server.starttls()
-                    server.login(smtp_user, smtp_password)
-                    server.send_message(msg)
-
-                st.success(f"Notification sent to {recipient}")
+                    server.login("demo@example.com", "your_password_here")  # احذف لاحقًا
+                    server.sendmail(sender_email, recipient_email, msg.as_string())
+                st.success(f"Email sent to {recipient_email}")
             except Exception as e:
                 st.error(f"Failed to send email: {e}")
