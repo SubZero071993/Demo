@@ -68,29 +68,30 @@ for model in updated_df["Model"]:
     config_url = f"https://example.com/configs/{model_clean}.pdf"
     st.markdown(f"**{model}** – [📄 Brochure]({brochure_url}) | [🛠️ Config]({config_url})", unsafe_allow_html=True)
 
-import smtplib
-from email.mime.text import MIMEText
+import streamlit as st
 
-# بيانات التجربة
-sender = "hossam.al-zahrani@siemens-healthineers.com"
-receiver = "hossam.al-zahrani@siemens-healthineers.com"
-subject = "Test Email from Streamlit"
-body = "This is a test email sent from a Python script without a password."
+# ... your other imports and code ...
 
-# إعداد الإيميل
-msg = MIMEText(body)
-msg['Subject'] = subject
-msg['From'] = sender
-msg['To'] = receiver
+def send_email_no_auth(to_email, subject, body):
+    # Your email sending logic here
+    pass  # Replace with actual implementation
 
-try:
-    with smtplib.SMTP("smtp.office365.com", 587) as server:
-        server.starttls()
-        # ما فيه login هنا
-        server.sendmail(sender, receiver, msg.as_string())
-    print("تم الإرسال بنجاح.")
-except Exception as e:
-    print("فشل الإرسال:", e)
+# Streamlit UI
+st.title("Notification Demo")
+
+recipient = st.text_input("Recipient Email")
+subject = st.text_input("Subject", value="Notification")
+body = st.text_area("Message", value="You have a new notification!")
+
+if st.button("Notify"):
+    if recipient:
+        success = send_email_no_auth(recipient, subject, body)
+        if success:
+            st.success("Notification sent!")
+        else:
+            st.error("Failed to send notification.")
+    else:
+        st.warning("Please enter a recipient email address.")
 
 
 # أزرار التنبيه
