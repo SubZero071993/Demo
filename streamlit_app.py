@@ -8,7 +8,7 @@ from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
 # إعداد الصفحة
 st.set_page_config(layout="wide")
-st.image("https://upload.wikimedia.org/wikipedia/commons/4/44/Siemens_Healthineers_logo.svg", width=200)
+st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=200)
 st.title("C-arm Demo Unit Tracker")
 
 # قائمة مدراء الحساب والإيميلات
