@@ -13,7 +13,7 @@ st.title("C-arm Demo Unit Tracker")
 
 # قائمة مدراء الحساب والإيميلات
 account_managers = {
-    "Ayman Tamimi": "ayman.tamimi@example.com",
+    "Ayman Tamimi": "hossam.al-zahrani@siemens-healthineers.com",
     "Wesam": "wesam@example.com",
     "Ammar": "ammar@example.com",
     "Saleh": "saleh@example.com",
