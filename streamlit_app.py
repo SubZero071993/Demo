@@ -122,3 +122,31 @@ C-arm Demo Tracker – Siemens Healthineers
                 st.success(f"Email sent to {recipient_email}")
             except Exception as e:
                 st.error(f"Failed to send email: {e}")
+import streamlit as st
+import pandas as pd
+import gspread
+from google.oauth2.service_account import Credentials
+
+# --- إعداد الاتصال بـ Google Sheets من secrets ---
+scope = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"
+]
+creds = Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"],
+    scopes=scope
+)
+
+# --- فتح Google Sheet باستخدام gspread ---
+client = gspread.authorize(creds)
+spreadsheet = client.open("C-arm Demo")  # ✏️ غيّر هذا الاسم
+worksheet = spreadsheet.sheet1  # أو حدد الورقة الثانية مثلاً بـ .get_worksheet(1)
+
+# --- قراءة البيانات وتحويلها إلى DataFrame ---
+data = worksheet.get_all_records()
+df = pd.DataFrame(data)
+
+# --- عرض الجدول في Streamlit ---
+st.title("C-arm Demo Tracker - Google Sheet Live")
+
+st.dataframe(df, use_container_width=True)
