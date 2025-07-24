@@ -79,7 +79,7 @@ def send_email_no_auth(receiver_email, subject, body):
     msg.attach(MIMEText(body, "plain"))
 
     try:
-        with smtplib.SMTP("mail.yourcompany.com", 25) as server:  # عدّل حسب السيرفر الداخلي
+        with smtplib.SMTP("hossam.al-zahrani@siemens-healthineers.com", 25) as server:  # عدّل حسب السيرفر الداخلي
             server.sendmail(sender_email, receiver_email, msg.as_string())
         return True
     except Exception as e:
