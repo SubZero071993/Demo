@@ -1,19 +1,29 @@
 import streamlit as st
 import pandas as pd
-from st_aggrid import AgGrid, GridOptionsBuilder
 from datetime import datetime
 import smtplib
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
+# إعداد الصفحة
 st.set_page_config(layout="wide")
-
-# شعار
-st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300)
+st.image("https://upload.wikimedia.org/wikipedia/commons/4/44/Siemens_Healthineers_logo.svg", width=200)
 st.title("C-arm Demo Unit Tracker")
 
-# بيانات
+# قائمة مدراء الحساب والإيميلات
+account_managers = {
+    "Ayman Tamimi": "ayman.tamimi@example.com",
+    "Wesam": "wesam@example.com",
+    "Ammar": "ammar@example.com",
+    "Saleh": "saleh@example.com",
+    "Mohammad Al-Hamed": "mohammad.alhamed@example.com",
+    "Moath": "moath@example.com"
+}
+
+# البيانات
 data = [
-    {"Model": "Cios Alpha", "Delivery Date": "2025-07-01", "Location": "Riyadh", "App Specialist": "Ali", "Account Manager": "Moath"},
+    {"Model": "Cios Alpha", "Delivery Date": "2025-07-01", "Location": "Riyadh", "App Specialist": "Ali", "Account Manager": "Ayman Tamimi"},
     {"Model": "Cios Spin", "Delivery Date": "2025-07-03", "Location": "Jeddah", "App Specialist": "Sara", "Account Manager": "Ayman Tamimi"},
     {"Model": "Cios Select", "Delivery Date": "2025-07-10", "Location": "Warehouse", "App Specialist": "Ahmed", "Account Manager": "Wesam"},
     {"Model": "Cios Fit", "Delivery Date": "2025-07-15", "Location": "Dammam", "App Specialist": "Lama", "Account Manager": "Ammar"},
@@ -21,69 +31,90 @@ data = [
     {"Model": "Cios Flow", "Delivery Date": "2025-07-21", "Location": "Warehouse", "App Specialist": "Yasmin", "Account Manager": "Mohammad Al-Hamed"},
 ]
 
-# الإيميلات المرتبطة بمدراء الحسابات
-emails = {
-    "Moath": "moath@example.com",
-    "Ayman Tamimi": "ayman@example.com",
-    "Wesam": "wesam@example.com",
-    "Ammar": "ammar@example.com",
-    "Saleh": "saleh@example.com",
-    "Mohammad Al-Hamed": "mohammad@example.com"
-}
-
-# حساب عدد الأيام (باستثناء Warehouse)
-today = datetime.today()
-for row in data:
-    delivery_date = datetime.strptime(row["Delivery Date"], "%Y-%m-%d")
-    days = (today - delivery_date).days
-    row["Days in Location"] = days if row["Location"].lower() != "warehouse" else 0
-
-# تحويل لقائمة قابلة للتعديل
 df = pd.DataFrame(data)
-managers = list(emails.keys())
+df["Delivery Date"] = pd.to_datetime(df["Delivery Date"])
+today = pd.to_datetime(datetime.today().date())
 
+# حساب الأيام باستثناء "Warehouse"
+df["Days in Location"] = df.apply(
+    lambda row: (today - row["Delivery Date"]).days if row["Location"].lower() != "warehouse" else 0,
+    axis=1
+)
+
+# إعداد خيارات الجدول
 gb = GridOptionsBuilder.from_dataframe(df)
-gb.configure_default_column(editable=True)
-gb.configure_column("Account Manager", editable=True, cellEditor='agSelectCellEditor', cellEditorParams={'values': managers})
-grid = AgGrid(df, gridOptions=gb.build(), update_mode="MODEL_CHANGED", height=400)
+gb.configure_column("Account Manager", editable=True, cellEditor='agSelectCellEditor',
+                    cellEditorParams={'values': list(account_managers.keys())})
+gb.configure_column("Days in Location", editable=False)
+gb.configure_grid_options(domLayout='normal')
+grid_options = gb.build()
 
-# إشعار بالإيميل
-st.subheader("Send Email Notification")
+# عرض الجدول
+st.subheader("📋 Device Table (Editable)")
+grid_response = AgGrid(
+    df,
+    gridOptions=grid_options,
+    update_mode=GridUpdateMode.MODEL_CHANGED,
+    fit_columns_on_grid_load=True,
+    height=600
+)
+updated_df = pd.DataFrame(grid_response["data"])
 
-for i, row in grid["data"].iterrows():
-    with st.expander(f"Notify: {row['Model']}"):
-        if st.button(f"Send Alert to {row['Account Manager']}", key=f"btn_{i}"):
-            manager = row['Account Manager']
-            email = emails.get(manager)
-            if email:
-                msg = MIMEText(f"""Dear {manager},
+# روابط البروشور والكونفيقريشن
+st.subheader("📎 Brochure & Configuration Links")
+for model in updated_df["Model"]:
+    model_clean = model.replace(" ", "").lower()
+    brochure_url = f"https://example.com/brochures/{model_clean}.pdf"
+    config_url = f"https://example.com/configs/{model_clean}.pdf"
+    st.markdown(f"**{model}** – [📄 Brochure]({brochure_url}) | [🛠️ Config]({config_url})", unsafe_allow_html=True)
 
-This is an automatic notification regarding the demo unit: {row['Model']} currently located in {row['Location']} since {row['Delivery Date']}.
+# دالة إرسال إيميل بدون باسورد (SMTP بدون توثيق)
+def send_email_no_auth(receiver_email, subject, body):
+    sender_email = "demo-tracker@yourcompany.com"  # حطه وهمي أو إيميل عام للشركة
 
-Please take necessary actions if needed.
+    msg = MIMEMultipart()
+    msg["From"] = sender_email
+    msg["To"] = receiver_email
+    msg["Subject"] = subject
+    msg.attach(MIMEText(body, "plain"))
 
-Regards,
-C-arm Tracking System
-""")
-                msg['Subject'] = f"Demo Unit Alert: {row['Model']}"
-                msg['From'] = "demo-tracker@yourdomain.com"
-                msg['To'] = email
+    try:
+        with smtplib.SMTP("mail.yourcompany.com", 25) as server:  # عدّل حسب السيرفر الداخلي
+            server.sendmail(sender_email, receiver_email, msg.as_string())
+        return True
+    except Exception as e:
+        st.error(f"❌ Failed to send email: {e}")
+        return False
 
-                try:
-                    # هنا ممكن تغير الإعدادات لو عندك SMTP فعّال
-                    smtp = smtplib.SMTP("your.smtp.server", 587)
-                    smtp.starttls()
-                    smtp.login("your_username", "your_password")
-                    smtp.sendmail(msg['From'], [msg['To']], msg.as_string())
-                    smtp.quit()
-                    st.success(f"Email sent to {manager}")
-                except Exception as e:
-                    st.error(f"Failed to send email: {e}")
-            else:
-                st.warning("No email found for this account manager.")
+# أزرار التنبيه
+st.subheader("🔔 Notify Account Managers")
 
-# روابط البروشور والكونفيق
-st.subheader("📎 Clickable Links")
-for model in df["Model"]:
-    st.markdown(f"- **{model}** – [Brochure](https://example.com/{model.replace(' ', '_')}_brochure.pdf) | [Configuration](https://example.com/{model.replace(' ', '_')}_config.pdf)")
+for idx, row in updated_df.iterrows():
+    model = row["Model"]
+    manager = row["Account Manager"]
+    email = account_managers.get(manager)
+    days = row["Days in Location"]
+    location = row["Location"]
+
+    if st.button(f"🔔 Notify: {model}"):
+        if not email:
+            st.warning(f"No email found for {manager}")
+        else:
+            subject = f"🔔 Reminder: {model} has been in {location} for {days} days"
+            body = f"""Dear {manager},
+
+This is an automated notification regarding the demo unit:
+
+Model: {model}
+Location: {location}
+Days in Location: {days}
+
+Please take appropriate action if needed.
+
+Best regards,
+Hossam
+"""
+            success = send_email_no_auth(email, subject, body)
+            if success:
+                st.success(f"✅ Email sent to {manager} at {email}")
 
