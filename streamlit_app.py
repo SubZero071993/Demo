@@ -1,128 +1,106 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
+import base64
+import os
 
-# إعداد الصفحة
+# ----------- Page Config -----------
 st.set_page_config(layout="wide")
-st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=200)
-st.title("C-arm Demo Unit Tracker")
 
-# قائمة مدراء الحساب والإيميلات
-account_managers = {
-    "Ayman Tamimi": "hossam.al-zahrani@siemens-healthineers.com",
-    "Wesam": "wesam@example.com",
-    "Ammar": "ammar@example.com",
-    "Saleh": "saleh@example.com",
-    "Mohammad Al-Hamed": "mohammad.alhamed@example.com",
-    "Moath": "moath@example.com"
-}
+# ----------- Logo -----------
+st.image("sh_logo_rgb.png", width=200)
 
-# البيانات
-data = [
-    {"Model": "Cios Alpha", "Delivery Date": "2025-07-01", "Location": "Riyadh", "App Specialist": "Ali", "Account Manager": "Ayman Tamimi"},
-    {"Model": "Cios Spin", "Delivery Date": "2025-07-03", "Location": "Jeddah", "App Specialist": "Sara", "Account Manager": "Ayman Tamimi"},
-    {"Model": "Cios Select", "Delivery Date": "2025-07-10", "Location": "Warehouse", "App Specialist": "Ahmed", "Account Manager": "Wesam"},
-    {"Model": "Cios Fit", "Delivery Date": "2025-07-15", "Location": "Dammam", "App Specialist": "Lama", "Account Manager": "Ammar"},
-    {"Model": "Cios Fusion", "Delivery Date": "2025-07-18", "Location": "Makkah", "App Specialist": "Omar", "Account Manager": "Saleh"},
-    {"Model": "Cios Flow", "Delivery Date": "2025-07-21", "Location": "Warehouse", "App Specialist": "Yasmin", "Account Manager": "Mohammad Al-Hamed"},
-]
+st.markdown("<h1 style='color:#ff6600;'>C-arm Demo Unit Tracker</h1>", unsafe_allow_html=True)
 
-df = pd.DataFrame(data)
+# ----------- File Setup -----------
+CSV_FILE = "demo_units.csv"
+if not os.path.exists(CSV_FILE):
+    df = pd.DataFrame(columns=["Model", "Delivery Date", "Location", "App Specialist", "Account Manager", "Days in Location", "Issue"])
+    df.to_csv(CSV_FILE, index=False)
+else:
+    df = pd.read_csv(CSV_FILE)
+
+# ----------- Data Preprocessing -----------
 df["Delivery Date"] = pd.to_datetime(df["Delivery Date"])
 today = pd.to_datetime(datetime.today().date())
+df["Days in Location"] = (today - df["Delivery Date"]).dt.days
+df["Issue"] = df["Issue"].fillna(False)
 
-# حساب الأيام باستثناء "Warehouse"
-df["Days in Location"] = df.apply(
-    lambda row: (today - row["Delivery Date"]).days if row["Location"].lower() != "warehouse" else 0,
-    axis=1
-)
-
-# إعداد خيارات الجدول
-gb = GridOptionsBuilder.from_dataframe(df)
-gb.configure_column("Account Manager", editable=True, cellEditor='agSelectCellEditor',
-                    cellEditorParams={'values': list(account_managers.keys())})
-gb.configure_column("Days in Location", editable=False)
-gb.configure_grid_options(domLayout='normal')
-grid_options = gb.build()
-
-# عرض الجدول
-st.subheader("📋 Device Table (Editable)")
-grid_response = AgGrid(
+# ----------- Editable Table -----------
+edited_df = st.data_editor(
     df,
-    gridOptions=grid_options,
-    update_mode=GridUpdateMode.MODEL_CHANGED,
-    fit_columns_on_grid_load=True,
-    height=600
+    num_rows="dynamic",
+    use_container_width=True,
+    column_config={
+        "Issue": st.column_config.CheckboxColumn("🔧 Device Issue", help="Check if the device has an issue"),
+    }
 )
-updated_df = pd.DataFrame(grid_response["data"])
 
-# روابط البروشور والكونفيقريشن
-st.subheader("📎 Brochure & Configuration Links")
-for model in updated_df["Model"]:
-    model_clean = model.replace(" ", "").lower()
-    brochure_url = f"https://example.com/brochures/{model_clean}.pdf"
-    config_url = f"https://example.com/configs/{model_clean}.pdf"
-    st.markdown(f"**{model}** – [📄 Brochure]({brochure_url}) | [🛠️ Config]({config_url})", unsafe_allow_html=True)
+# ----------- Save Changes -----------
+edited_df.to_csv(CSV_FILE, index=False)
 
-import streamlit as st
-
-# ... your other imports and code ...
-
-def send_email_no_auth(to_email, subject, body):
-    # Your email sending logic here
-    pass  # Replace with actual implementation
-
-# Streamlit UI
-st.title("Notification Demo")
-
-recipient = st.text_input("Recipient Email")
-subject = st.text_input("Subject", value="Notification")
-body = st.text_area("Message", value="You have a new notification!")
-
-if st.button("Notify"):
-    if recipient:
-        success = send_email_no_auth(recipient, subject, body)
-        if success:
-            st.success("Notification sent!")
-        else:
-            st.error("Failed to send notification.")
+# ----------- Highlight Broken Devices -----------
+def highlight_issues(row):
+    if row["Issue"]:
+        return ["background-color: #ffe6e6"] * len(row)
     else:
-        st.warning("Please enter a recipient email address.")
+        return [""] * len(row)
 
+styled_df = edited_df.style.apply(highlight_issues, axis=1)
+st.dataframe(styled_df, use_container_width=True, hide_index=True)
 
-# أزرار التنبيه
-st.subheader("🔔 Notify Account Managers")
+# ----------- Email Notification Section -----------
+st.markdown("## 🔔 Send Email Notification")
 
-for idx, row in updated_df.iterrows():
-    model = row["Model"]
-    manager = row["Account Manager"]
-    email = account_managers.get(manager)
-    days = row["Days in Location"]
-    location = row["Location"]
+for i, row in edited_df.iterrows():
+    col1, col2 = st.columns([0.9, 0.1])
+    with col1:
+        st.write(f"Notify: {row['Model']}")
+    with col2:
+        if st.button("🔔", key=row["Model"]):
+            st.success(f"📧 Email would be sent to {row['Account Manager']} (placeholder)")
+            # Add actual email logic here if needed
 
-    if st.button(f"🔔 Notify: {model}"):
-        if not email:
-            st.warning(f"No email found for {manager}")
-        else:
-            subject = f"🔔 Reminder: {model} has been in {location} for {days} days"
-            body = f"""Dear {manager},
+# ----------- Brochure & Config Links -----------
+st.markdown("---")
+st.markdown("## 📎 Brochure & Configuration Links")
 
-This is an automated notification regarding the demo unit:
+links = {
+    "Cios Alpha": {
+        "brochure": "https://example.com/alpha_brochure.pdf",
+        "config": "https://example.com/alpha_config.pdf"
+    },
+    "Cios Spin": {
+        "brochure": "https://example.com/spin_brochure.pdf",
+        "config": "https://example.com/spin_config.pdf"
+    },
+    "Cios Select": {
+        "brochure": "https://example.com/select_brochure.pdf",
+        "config": "https://example.com/select_config.pdf"
+    },
+    "Cios Fit": {
+        "brochure": "https://example.com/fit_brochure.pdf",
+        "config": "https://pdf.ac/3u7Xrl"
+    },
+    "Cios Fusion": {
+        "brochure": "https://example.com/fusion_brochure.pdf",
+        "config": "https://example.com/fusion_config.pdf"
+    },
+    "Cios Flow": {
+        "brochure": "https://example.com/flow_brochure.pdf",
+        "config": "https://example.com/flow_config.pdf"
+    },
+}
 
-Model: {model}
-Location: {location}
-Days in Location: {days}
+for model, files in links.items():
+    st.markdown(f"**{model}** – 📄 [Brochure]({files['brochure']}) | 🛠 [Config]({files['config']})")
 
-Please take appropriate action if needed.
-
-Best regards,
-Hossam
-"""
-            success = send_email_no_auth(email, subject, body)
-            if success:
-                st.success(f"✅ Email sent to {manager} at {email}")
-
+# Optional: Hide streamlit style
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
