@@ -68,23 +68,30 @@ for model in updated_df["Model"]:
     config_url = f"https://example.com/configs/{model_clean}.pdf"
     st.markdown(f"**{model}** – [📄 Brochure]({brochure_url}) | [🛠️ Config]({config_url})", unsafe_allow_html=True)
 
-# دالة إرسال إيميل بدون باسورد (SMTP بدون توثيق)
-def send_email_no_auth(receiver_email, subject, body):
-    sender_email = "demo-tracker@yourcompany.com"  # حطه وهمي أو إيميل عام للشركة
+import smtplib
+from email.mime.text import MIMEText
 
-    msg = MIMEMultipart()
-    msg["From"] = sender_email
-    msg["To"] = receiver_email
-    msg["Subject"] = subject
-    msg.attach(MIMEText(body, "plain"))
+# بيانات التجربة
+sender = "hossam.al-zahrani@siemens-healthineers.com"
+receiver = "hossam.al-zahrani@siemens-healthineers.com"
+subject = "Test Email from Streamlit"
+body = "This is a test email sent from a Python script without a password."
 
-    try:
-        with smtplib.SMTP("hossam.al-zahrani@siemens-healthineers.com", 25) as server:  # عدّل حسب السيرفر الداخلي
-            server.sendmail(sender_email, receiver_email, msg.as_string())
-        return True
-    except Exception as e:
-        st.error(f"❌ Failed to send email: {e}")
-        return False
+# إعداد الإيميل
+msg = MIMEText(body)
+msg['Subject'] = subject
+msg['From'] = sender
+msg['To'] = receiver
+
+try:
+    with smtplib.SMTP("smtp.office365.com", 587) as server:
+        server.starttls()
+        # ما فيه login هنا
+        server.sendmail(sender, receiver, msg.as_string())
+    print("تم الإرسال بنجاح.")
+except Exception as e:
+    print("فشل الإرسال:", e)
+
 
 # أزرار التنبيه
 st.subheader("🔔 Notify Account Managers")
