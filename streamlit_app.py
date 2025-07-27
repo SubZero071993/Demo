@@ -95,7 +95,7 @@ st.title("📄 Brochures and Configurations for C-arm Devices")
 df = pd.DataFrame(devices)
 
 df["Brochure"] = df["Brochure"].apply(lambda x: f"[📎 Download]({x})")
- df["Configuration"] = df["Configuration"].apply(lambda x: f"[⚙️ Download]({x})") 
+df["Configuration"] = df["Configuration"].apply(lambda x: f"[⚙️ Download]({x})") 
 
 st.markdown("### 🔗 Device Files") st.write(df.to_markdown(index=False), unsafe_allow_html=True)
 
