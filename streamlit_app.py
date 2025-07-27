@@ -66,3 +66,37 @@ def highlight_row(row):
 st.markdown("### 🎨 Final Results:")
 styled_df = edited_df.style.apply(highlight_row, axis=1)
 st.dataframe(styled_df, use_container_width=True)
+
+st.set_page_config(layout="wide")
+st.title("📄 Brochures and Configurations for C-arm Devices") 
+# البيانات devices = [
+            {
+                "Device": "Cios Connect", 
+                "Brochure": "https://example.com/connect_brochure.pdf",
+                "Configuration": "https://example.com/connect_config.pdf"
+            },
+            {
+                "Device": "Cios Fusion",
+                "Brochure": "https://example.com/fusion_brochure.pdf",
+                "Configuration": "https://example.com/fusion_config.pdf"
+            },
+            {
+                "Device": "Cios Alpha VA30",
+                "Brochure": "https://example.com/alpha_brochure.pdf",
+                "Configuration": "https://example.com/alpha_config.pdf"
+            }, 
+            {
+                 "Device": "Cios Spin VA30",
+                "Brochure": "Link", 
+                "Configuration": "Link",
+            },
+]
+
+df = pd.dataframe(devices)
+
+df["Brochure"] = df["Brochure"].apply(lambda x: f"[📎 Download]({x})")
+ df["Configuration"] = df["Configuration"].apply(lambda x: f"[⚙️ Download]({x})") 
+
+st.markdown("### 🔗 Device Files") st.write(df.to_markdown(index=False), unsafe_allow_html=True)
+
+                
