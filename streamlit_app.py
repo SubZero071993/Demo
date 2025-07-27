@@ -7,7 +7,11 @@ st.image( "https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthine
 
 # بيانات الأجهزة
 
-account_managers = df["Moath" , "Ayman Tamimi" , "Wesam" , "Ammar" , "Ayman Ghandurah" , "Saleh" , "Najla" , "Tuqa" , "Mohammad Al-Hamed" , "Mohammad Al-Mutairi" , "Ahmad" , "Iqbal" , "Anas" , "Mohammad Gharibeh"].unique()
+account_managers = [
+    "Moath", "Ayman Tamimi", "Wesam", "Ammar", "Ayman Ghandurah", 
+    "Saleh", "Najla", "Tuqa", "Mohammad Al-Hamed", "Mohammad Al-Mutairi", 
+    "Ahmad", "Iqbal", "Anas", "Mohammad Gharibeh"
+]
 selected_manager = st.selectbox("Select Account Manager", account_managers)
 
 filtered_df = df[df["Account Manager"] == selected_manager]
