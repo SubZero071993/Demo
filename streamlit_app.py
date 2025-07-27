@@ -5,8 +5,7 @@ from datetime import datetime
 #Logo
 st.image( "https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300 )
 
-
-# Data
+# بيانات الأجهزة
 data = [
     ["Cios Select FD VA20", "22-07-25", 20087, "warehouse", "", ""],
     ["Cios Connect", "25-05-25", 21521, "Al-Rawdhah Hospital (until we submit Cios Select)", "Ayman Tamimi", ""],
@@ -25,57 +24,48 @@ columns = [
     "Application Specialist"
 ]
 
+# تحويل البيانات إلى DataFrame
 df = pd.DataFrame(data, columns=columns)
+
+# تحويل التاريخ وإزالة الوقت
 df["Delivery Date"] = pd.to_datetime(df["Delivery Date"], format="%d-%m-%y").dt.date
 
+# حساب عدد الأيام في الموقع
 today = datetime(2025, 7, 27).date()
 df["Days in Site"] = df.apply(
-    lambda row: (today - row["Delivery Date"]).days 
+    lambda row: (pd.to_datetime(today) - pd.to_datetime(row["Delivery Date"])).days 
     if row["Current Location"].strip().lower() != "warehouse" else "",
     axis=1
 )
+
+# إضافة عمود "هل الجهاز خربان؟" (قابل للتعديل)
 df["Is Broken?"] = False
 
+# عنوان الصفحة
 st.set_page_config(layout="wide")
 st.title("📋C-Arm Demo (CAD)")
 
-# Editable schedule
+# عرض الجدول قابل للتعديل
 edited_df = st.data_editor(
     df,
     use_container_width=True,
-    num_rows="dynamic",
-    column_config={
-        "Is Broken?": st.column_config.CheckboxColumn("Is Broken?"),
-    }
+    num_rows="dynamic"
 )
 
-# Generate background color for each row
-def get_row_bg(row):
+# ====== 🎨 تنسيق الألوان ======
+def highlight_row(row):
     if row["Is Broken?"]:
-        return "background-color: #dddddd;"  # light-grey
-    elif row["Days in Site"] != "" and row["Days in Site"] > 14 and row["Current Location"].strip().lower() != "warehouse":
-        return "background-color: #fff9c4;"  # yellow
+        return ["background-color: lightgray"] * len(row)
+    elif str(row["Current Location"]).strip().lower() == "warehouse":
+        return ["background-color: lightgreen"] * len(row)
+    elif isinstance(row["Days in Site"], (int, float)) and row["Days in Site"] > 14:
+        return ["background-color: lightyellow"] * len(row)
     else:
-        return ""
+        return [""] * len(row)
 
-# Display table with color cues (as emoji or color boxes for visibility)
-def display_colored_schedule(df):
-    st.markdown("### Schedule")
-    for idx, row in df.iterrows():
-        style = get_row_bg(row)
-        # You can display a colored box or emoji for visual cue
-        color_box = ""
-        if style:
-            if "#dddddd" in style:
-                color_box = "⬜️"
-            elif "#fff9c4" in style:
-                color_box = "🟨"
-        st.markdown(
-            f"{color_box} **{row['Demo C-arm Model']}** | Delivery: {row['Delivery Date']} | Serial: {row['Serial #']} | Location: {row['Current Location']} | Days in Site: {row['Days in Site']} | Broken: {row['Is Broken?']}"
-        )
-
-# Show colored schedule summary below editable table
-display_colored_schedule(edited_df)
+st.markdown("### 🎨 Final Results:")
+styled_df = edited_df.style.apply(highlight_row, axis=1)
+st.dataframe(styled_df, use_container_width=True)
 
 st.set_page_config(layout="wide")
 st.title("📎Brochures and Configurations ") 
