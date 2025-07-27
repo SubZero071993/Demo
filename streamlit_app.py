@@ -45,6 +45,3 @@ edited_df = st.data_editor(
     num_rows="dynamic"
 )
 
-# عرض الجدول المعدل
-st.write("### 🔄 الجدول بعد التعديل:")
-st.dataframe(edited_df, use_container_width=True)
