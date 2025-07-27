@@ -94,10 +94,9 @@ devices = [
 
 df = pd.DataFrame(devices)
 
-df["Brochure"] = df["Brochure"].apply(lambda x: f"[📎 Download]({x})")
-df["Configuration"] = df["Configuration"].apply(lambda x: f"[⚙️ Download]({x})") 
-
-st.markdown("### 🔗 Device Files")
-st.markdown(df.to_markdown(index=False), unsafe_allow_html=True)
+for device in devices:
+    st.markdown(f"### {device['Device']}")
+    st.markdown(f"- [Brochure PDF]({device['Brochure']})" if device['Brochure'] else "- Brochure PDF: (link not added)")
+    st.markdown(f"- [Configuration PDF]({device['Configuration']})" if device['Configuration'] else "- Configuration PDF: (link not added)")
 
                 
