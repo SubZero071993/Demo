@@ -14,7 +14,6 @@ account_managers = [
 ]
 selected_manager = st.selectbox("Select Account Manager", account_managers)
 
-filtered_df = df[df["Account Manager"] == selected_manager]
 
 edited_df = st.data_editor(
     filtered_df,
@@ -67,6 +66,8 @@ edited_df = st.data_editor(
     use_container_width=True,
     num_rows="dynamic"
 )
+
+filtered_df = df[df["Account Manager"] == selected_manager]
 
 # ====== 🎨 تنسيق الألوان ======
 def highlight_row(row):
