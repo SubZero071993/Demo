@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
-# البيانات
+# بيانات الأجهزة
 data = [
     ["Cios Select FD VA20", "22-07-25", 20087, "warehouse", "", ""],
     ["Cios Connect", "25-05-25", 21521, "Al-Rawdhah Hospital (until we submit Cios Select)", "Ayman Tamimi", ""],
@@ -21,17 +21,30 @@ columns = [
     "Application Specialist"
 ]
 
-# تحويل إلى DataFrame
+# تحويل البيانات إلى DataFrame
 df = pd.DataFrame(data, columns=columns)
 
-# تحويل التاريخ
-df["Delivery Date"] = pd.to_datetime(df["Delivery Date"], format="%d-%m-%y")
-today = datetime(2025, 7, 27)
-df["Days in Site"] = (today - df["Delivery Date"]).dt.days
+# تحويل التاريخ وإزالة الوقت
+df["Delivery Date"] = pd.to_datetime(df["Delivery Date"], format="%d-%m-%y").dt.date
 
-# عمود "هل الجهاز خربان؟" – افتراضيًا كل الأجهزة سليمة
+# حساب عدد الأيام في الموقع
+today = datetime(2025, 7, 27).date()
+df["Days in Site"] = (pd.to_datetime(today) - pd.to_datetime(df["Delivery Date"])).dt.days
+
+# إضافة عمود "هل الجهاز خربان؟" (قابل للتعديل)
 df["Is Broken?"] = False
 
-# عرض الجدول
-st.title("C-arm Device Table")
-st.dataframe(df, use_container_width=True)
+# عنوان الصفحة
+st.set_page_config(layout="wide")
+st.title("📋 جدول أجهزة C-arm التجريبية")
+
+# عرض الجدول قابل للتعديل
+edited_df = st.data_editor(
+    df,
+    use_container_width=True,
+    num_rows="dynamic"
+)
+
+# عرض الجدول المعدل
+st.write("### 🔄 الجدول بعد التعديل:")
+st.dataframe(edited_df, use_container_width=True)
