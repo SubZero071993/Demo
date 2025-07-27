@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
+st.image( "https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300 )
+
 # بيانات الأجهزة
 data = [
     ["Cios Select FD VA20", "22-07-25", 20087, "warehouse", "", ""],
