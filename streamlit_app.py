@@ -48,6 +48,16 @@ st.title("📋C-Arm Demo (CAD)")
 # عرض الجدول قابل للتعديل
 edited_df = st.data_editor(
     df,
+    column_config={
+        "Account Manager": st.column_config.SelectboxColumn(
+            "Account Manager",
+            options=[
+                "Moath", "Ayman Tamimi", "Wesam", "Ammar", "Ayman Ghandurah", 
+                "Saleh", "Najla", "Tuqa", "Mohammad Al-Hamed", "Mohammad Al-Mutairi", 
+                "Ahmad", "Iqbal", "Anas", "Mohammad Gharibeh"
+            ]
+        )
+    },
     use_container_width=True,
     num_rows="dynamic"
 )
