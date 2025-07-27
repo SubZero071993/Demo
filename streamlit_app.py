@@ -5,7 +5,10 @@ from datetime import datetime
 #Logo
 st.image( "https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300 )
 
-# بيانات الأجهزة
+import streamlit as st
+import pandas as pd
+from datetime import datetime
+
 data = [
     ["Cios Select FD VA20", "22-07-25", 20087, "warehouse", "", ""],
     ["Cios Connect", "25-05-25", 21521, "Al-Rawdhah Hospital (until we submit Cios Select)", "Ayman Tamimi", ""],
@@ -49,19 +52,31 @@ st.title("📋C-Arm Demo (CAD)")
 edited_df = st.data_editor(
     df,
     use_container_width=True,
-    num_rows="dynamic"
+    num_rows="dynamic",
+    column_config={
+        "Is Broken?": st.column_config.CheckboxColumn("Is Broken?"),
+    }
 )
 
-# ====== 🎨 تنسيق الألوان ======
+# وظيفة التلوين حسب الشروط المطلوبة
 def highlight_row(row):
     if row["Is Broken?"]:
-        return ["background-color: lightgray"] * len(row)
-    elif str(row["Current Location"]).strip().lower() == "warehouse":
-        return ["background-color: lightgreen"] * len(row)
-    elif isinstance(row["Days in Site"], (int, float)) and row["Days in Site"] > 14:
-        return ["background-color: lightyellow"] * len(row)
+        return ['background-color: #dddddd'] * len(row)  # light-grey
+    elif (
+        row["Days in Site"] != "" 
+        and row["Days in Site"] > 14 
+        and row["Current Location"].strip().lower() != "warehouse"
+    ):
+        return ['background-color: #fff9c4'] * len(row)  # yellow
     else:
-        return [""] * len(row)
+        return [''] * len(row)
+
+# عرض الجدول مع التلوين
+st.markdown("### جدول الأجهزة مع تلوين الحالات")
+st.dataframe(
+    edited_df.style.apply(highlight_row, axis=1),
+    use_container_width=True
+)
 
 st.markdown("### 🎨 Final Results:")
 styled_df = edited_df.style.apply(highlight_row, axis=1)
