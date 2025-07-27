@@ -45,10 +45,6 @@ def row_style(row):
         return "background-color: yellow"
     return ""
 
-# تطبيق التنسيقات الشرطية
-styled_df = edited_df.style.apply(lambda row: [row_style(row)]*len(row), axis=1)
-st.dataframe(styled_df, use_container_width=True)
-
 st.markdown("### 🔗 روابط البروشور والكونفيقريشن لكل جهاز")
 for i, row in edited_df.iterrows():
     st.markdown(f"**{row['Demo C-arm Model']} ({row['Serial #']})**")
