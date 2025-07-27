@@ -48,3 +48,17 @@ edited_df = st.data_editor(
     num_rows="dynamic"
 )
 
+# ====== 🎨 تنسيق الألوان ======
+def highlight_row(row):
+    if row["Is Broken?"]:
+        return ["background-color: lightgray"] * len(row)
+    elif row["Current Location"].strip().lower() == "warehouse":
+        return ["background-color: lightgreen"] * len(row)
+    elif row["Days in Site"] > 14:
+        return ["background-color: lightyellow"] * len(row)
+    else:
+        return [""] * len(row)
+
+st.markdown("### 🎨 عرض الجدول بتنسيق لوني")
+styled_df = edited_df.style.apply(highlight_row, axis=1)
+st.dataframe(styled_df, use_container_width=True)
