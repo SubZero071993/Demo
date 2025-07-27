@@ -70,7 +70,7 @@ st.dataframe(styled_df, use_container_width=True)
 st.set_page_config(layout="wide")
 st.title("📄 Brochures and Configurations for C-arm Devices") 
 # البيانات devices = [
-            {
+         {
                 "Device": "Cios Connect", 
                 "Brochure": "https://example.com/connect_brochure.pdf",
                 "Configuration": "https://example.com/connect_config.pdf"
