@@ -7,7 +7,7 @@ import base64
 st.set_page_config(page_title="C-Arm Tracker", layout="wide")
 
 # تحميل الشعار وعرضه
-with open("siemens_logo.png", "rb") as image_file:
+with open("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", "rb") as image_file:
     encoded_image = base64.b64encode(image_file.read()).decode()
 st.markdown(
     f'<div style="text-align: center;"><img src="data:image/png;base64,{encoded_image}" width="200"></div>',
