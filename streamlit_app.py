@@ -32,7 +32,11 @@ df["Delivery Date"] = pd.to_datetime(df["Delivery Date"], format="%d-%m-%y").dt.
 
 # حساب عدد الأيام في الموقع
 today = datetime(2025, 7, 27).date()
-df["Days in Site"] = (pd.to_datetime(today) - pd.to_datetime(df["Delivery Date"])).dt.days
+df["Days in Site"] = df.apply(
+    lambda row: (pd.to_datetime(today) - pd.to_datetime(row["Delivery Date"])).days 
+    if row["Current Location"].strip().lower() != "warehouse" else "",
+    axis=1
+)
 
 # إضافة عمود "هل الجهاز خربان؟" (قابل للتعديل)
 df["Is Broken?"] = False
