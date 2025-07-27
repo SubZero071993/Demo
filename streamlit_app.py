@@ -36,7 +36,7 @@ df["Is Broken?"] = False
 
 # عنوان الصفحة
 st.set_page_config(layout="wide")
-st.title("📋 جدول أجهزة C-arm التجريبية")
+st.title("📋C-Arm Demo (CAD)")
 
 # عرض الجدول قابل للتعديل
 edited_df = st.data_editor(
