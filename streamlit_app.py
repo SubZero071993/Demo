@@ -72,31 +72,35 @@ st.title("📄 Brochures and Configurations for C-arm Devices")
 devices = [
     {
         "Device": "Cios Connect",
-        "Brochure": "",  # Add PDF link here
-        "Configuration": ""  # Add PDF link here
+        "Brochure": "https://example.com/cios_connect_brochure.pdf",
+        "Configuration": "https://example.com/cios_connect_config.pdf"
     },
     {
         "Device": "Cios Fusion",
-        "Brochure": "",
-        "Configuration": ""
+        "Brochure": "https://example.com/cios_fusion_brochure.pdf",
+        "Configuration": "https://example.com/cios_fusion_config.pdf"
     },
     {
         "Device": "Cios Alpha VA30",
-        "Brochure": "",
-        "Configuration": ""
+        "Brochure": "https://example.com/cios_alpha_va30_brochure.pdf",
+        "Configuration": "https://example.com/cios_alpha_va30_config.pdf"
     },
     {
         "Device": "Cios Spin",
-        "Brochure": "",
-        "Configuration": ""
+        "Brochure": "https://example.com/cios_spin_brochure.pdf",
+        "Configuration": "https://example.com/cios_spin_config.pdf"
     }
 ]
 
-df = pd.DataFrame(devices)
+import streamlit as st
+
+icon_brochure = "📄"
+icon_config = "🛠️"
 
 for device in devices:
     st.markdown(f"### {device['Device']}")
-    st.markdown(f"- [Brochure PDF]({device['Brochure']})" if device['Brochure'] else "- Brochure PDF: (link not added)")
-    st.markdown(f"- [Configuration PDF]({device['Configuration']})" if device['Configuration'] else "- Configuration PDF: (link not added)")
-
+    st.markdown(
+        f"{icon_brochure} Brochure: [Click here]({device['Brochure']})  \n"
+        f"{icon_config} Configuration: [Click here]({device['Configuration']})"
+    )
                 
