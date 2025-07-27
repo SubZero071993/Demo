@@ -1,7 +1,8 @@
+import streamlit as st
 import pandas as pd
 from datetime import datetime
 
-# البيانات من الجدول
+# البيانات
 data = [
     ["Cios Select FD VA20", "22-07-25", 20087, "warehouse", "", ""],
     ["Cios Connect", "25-05-25", 21521, "Al-Rawdhah Hospital (until we submit Cios Select)", "Ayman Tamimi", ""],
@@ -20,20 +21,17 @@ columns = [
     "Application Specialist"
 ]
 
-# إنشاء DataFrame
+# تحويل إلى DataFrame
 df = pd.DataFrame(data, columns=columns)
 
-# تحويل عمود التاريخ إلى datetime
+# تحويل التاريخ
 df["Delivery Date"] = pd.to_datetime(df["Delivery Date"], format="%d-%m-%y")
-
-# تحديد تاريخ اليوم (حسب طلبك = 27-07-2025)
 today = datetime(2025, 7, 27)
-
-# حساب عدد الأيام
 df["Days in Site"] = (today - df["Delivery Date"]).dt.days
 
-# إضافة عمود "هل الجهاز خربان؟"
-df["Is Broken?"] = False  # افتراضيًا ما فيه جهاز خربان
+# عمود "هل الجهاز خربان؟" – افتراضيًا كل الأجهزة سليمة
+df["Is Broken?"] = False
 
-# طباعة الجدول
-print(df)
+# عرض الجدول
+st.title("C-arm Device Table")
+st.dataframe(df, use_container_width=True)
