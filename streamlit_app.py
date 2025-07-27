@@ -1,152 +1,43 @@
-import streamlit as st
+from datetime import datetime
 import pandas as pd
-from datetime import datetime, date
-import smtplib
-from email.mime.text import MIMEText
+import streamlit as st
 import base64
 
-st.set_page_config(layout="wide")
+# إعداد الصفحة
+st.set_page_config(page_title="C-Arm Tracker", layout="wide")
 
-# شعار سيمنس
-st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=200)
-
-st.title("C-arm Demo Tracker - Siemens Healthineers")
-
-# البيانات الأساسية
-data = {
-    "Demo C-arm Model": [
-        "Cios Select FD VA20", "Cios Connect", "Cios Fusion",
-        "Cios Alpha VA20", "Cios Alpha VA30", "Cios Spin VA30"
-    ],
-    "Delivery Date": [
-        "22-07-25", "25-06-25", "25-05-25",
-        "30-05-25", "19-06-25", "10-07-25"
-    ],
-    "Serial #": [
-        20087, 21181, 21581,
-        13002, 13095, 50097
-    ],
-    "Current Location": [
-        "warehouse", "Al-Rawdah Hospital (until we submit Cios Select)", "Al-Salam Health Hospital",
-        "Al-Hayat Hospital (until they receive their c-arm)", "Aster Sanad Hospital", "Johns Hopkins Aramco Hospital"
-    ],
-    "Account Manager": [
-        "Ayman Tamimi", "Mohammad Ghariebh", "Mohammad Ghariebh",
-        "Ammar", "Ammar", "Ayman Tamimi"
-    ],
-    "Application Specialist": [
-        "", "", "Ali",
-        "", "", "Ali"
-    ],
-    "Device Faulty (🔧)": [
-        False, False, False,
-        False, False, False
-    ]
-}
-
-# تحويل التاريخ وحساب عدد الأيام
-df = pd.DataFrame(data)
-df["Delivery Date"] = pd.to_datetime(df["Delivery Date"], format="%d-%m-%y")
-today = pd.to_datetime(date.today())
-
-def calculate_days(row):
-    if row["Current Location"].strip().lower() == "warehouse":
-        return 0
-    return (today - row["Delivery Date"]).days
-
-df["Days in Location"] = df.apply(calculate_days, axis=1)
-
-# روابط البروشور والكونفيقريشن
-brochure_links = {
-    "Cios Select FD VA20": ("https://example.com/select_brochure", "https://example.com/select_config"),
-    "Cios Connect": ("https://example.com/connect_brochure", "https://example.com/connect_config"),
-    "Cios Fusion": ("https://example.com/fusion_brochure", "https://example.com/fusion_config"),
-    "Cios Alpha VA20": ("https://example.com/alpha20_brochure", "https://example.com/alpha20_config"),
-    "Cios Alpha VA30": ("https://example.com/alpha30_brochure", "https://example.com/alpha30_config"),
-    "Cios Spin VA30": ("https://example.com/spin_brochure", "https://example.com/spin_config")
-}
-
-# حفظ التعديلات في سيشن
-if "df" not in st.session_state:
-    st.session_state.df = df
-
-edited_df = st.data_editor(
-    st.session_state.df,
-    num_rows="dynamic",
-    use_container_width=True,
-    key="editable_table"
+# تحميل الشعار وعرضه
+with open("siemens_logo.png", "rb") as image_file:
+    encoded_image = base64.b64encode(image_file.read()).decode()
+st.markdown(
+    f'<div style="text-align: center;"><img src="data:image/png;base64,{encoded_image}" width="200"></div>',
+    unsafe_allow_html=True
 )
 
-# تظليل الصف إذا فيه عطل
-def style_row(row):
-    if row["Device Faulty (🔧)"]:
-        return ["background-color: #ffe6e6"] * len(row)
-    else:
-        return [""] * len(row)
-
-st.markdown("### 🔧 Brochure & Configuration Links")
-for model in df["Demo C-arm Model"]:
-    brochure, config = brochure_links.get(model, ("#", "#"))
-    st.markdown(f"- **{model}** — [📄 Brochure]({brochure}) | [🛠 Config]({config})")
-
-# زر إرسال إيميل تنبيه
+# عنوان الصفحة
+st.markdown("<h1 style='text-align: center;'>C-Arm Dashboard (CAD)</h1>", unsafe_allow_html=True)
 st.markdown("---")
-st.markdown("### 📬 Send Email Notification to Account Managers")
 
-for i, row in edited_df.iterrows():
-    if row["Days in Location"] > 14 and row["Current Location"].strip().lower() != "warehouse":
-        if st.button(f"Send Reminder to {row['Account Manager']}", key=f"email_{i}"):
-            # إعداد الإيميل (إيميل وهمي للتجربة، غيّره لاحقًا)
-            sender_email = "demo@example.com"
-            recipient_email = f"{row['Account Manager'].replace(' ', '').lower()}@example.com"
-            subject = f"Reminder: {row['Demo C-arm Model']} device has exceeded 14 days"
-            body = f"""Dear {row['Account Manager']},
+# تحميل البيانات
+@st.cache_data
+def load_data():
+    return pd.read_excel("c_arm_data.xlsx")
 
-The demo unit **{row['Demo C-arm Model']}** (Serial: {row['Serial #']}) has been in location "**{row['Current Location']}**" for **{row['Days in Location']}** days.
+df = load_data()
 
-Please take the necessary action as per the demo policy.
+# حساب عدد الأيام في كل موقع
+def calculate_days(date_str):
+    try:
+        date_obj = datetime.strptime(str(date_str), "%Y-%m-%d")
+        delta = datetime.now() - date_obj
+        return delta.days
+    except:
+        return None
 
-Best regards, 
-C-arm Demo Tracker – Siemens Healthineers
-"""
-            msg = MIMEText(body)
-            msg["Subject"] = subject
-            msg["From"] = sender_email
-            msg["To"] = recipient_email
+df["Days in Location"] = df["Delivery Date"].apply(calculate_days)
 
-            try:
-                with smtplib.SMTP("smtp.office365.com", 587) as server:
-                    server.starttls()
-                    server.login("demo@example.com", "your_password_here")  # احذف لاحقًا
-                    server.sendmail(sender_email, recipient_email, msg.as_string())
-                st.success(f"Email sent to {recipient_email}")
-            except Exception as e:
-                st.error(f"Failed to send email: {e}")
-import streamlit as st
-import pandas as pd
-import gspread
-from google.oauth2.service_account import Credentials
+# استثناء الأجهزة الموجودة في المستودع من التنبيه
+df["Notify"] = df["Current Location"].apply(lambda x: False if "مستودع" in str(x) else True)
 
-# --- إعداد الاتصال بـ Google Sheets من secrets ---
-scope = [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive"
-]
-creds = Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"],
-    scopes=scope
-)
-
-# --- فتح Google Sheet باستخدام gspread ---
-client = gspread.authorize(creds)
-spreadsheet = client.open("C-arm Demo")  # ✏️ غيّر هذا الاسم
-worksheet = spreadsheet.sheet1  # أو حدد الورقة الثانية مثلاً بـ .get_worksheet(1)
-
-# --- قراءة البيانات وتحويلها إلى DataFrame ---
-data = worksheet.get_all_records()
-df = pd.DataFrame(data)
-
-# --- عرض الجدول في Streamlit ---
-st.title("C-arm Demo Tracker - Google Sheet Live")
-
+# عرض الجدول بدون تعديل
 st.dataframe(df, use_container_width=True)
