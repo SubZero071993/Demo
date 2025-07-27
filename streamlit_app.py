@@ -68,7 +68,7 @@ styled_df = edited_df.style.apply(highlight_row, axis=1)
 st.dataframe(styled_df, use_container_width=True)
 
 st.set_page_config(layout="wide")
-st.title("📄 Brochures and Configurations for C-arm Devices") 
+st.title("📎Brochures and Configurations ") 
 devices = [
     {
         "Device": "Cios Connect",
