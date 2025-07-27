@@ -15,12 +15,6 @@ account_managers = [
 selected_manager = st.selectbox("Select Account Manager", account_managers)
 
 
-edited_df = st.data_editor(
-    filtered_df,
-    use_container_width=True,
-    num_rows="dynamic"
-)
-
 data = [
     ["Cios Select FD VA20", "22-07-25", 20087, "warehouse", "", ""],
     ["Cios Connect", "25-05-25", 21521, "Al-Rawdhah Hospital (until we submit Cios Select)", "Ayman Tamimi", ""],
@@ -68,6 +62,12 @@ edited_df = st.data_editor(
 )
 
 filtered_df = df[df["Account Manager"] == selected_manager]
+
+edited_df = st.data_editor(
+    filtered_df,
+    use_container_width=True,
+    num_rows="dynamic"
+)
 
 # ====== 🎨 تنسيق الألوان ======
 def highlight_row(row):
