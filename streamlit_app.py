@@ -5,9 +5,6 @@ from datetime import datetime
 #Logo
 st.image( "https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300 )
 
-import streamlit as st
-import pandas as pd
-from datetime import datetime
 
 # Data
 data = [
@@ -79,6 +76,7 @@ def display_colored_schedule(df):
 
 # Show colored schedule summary below editable table
 display_colored_schedule(edited_df)
+
 st.set_page_config(layout="wide")
 st.title("📎Brochures and Configurations ") 
 devices = [
