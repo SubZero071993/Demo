@@ -27,25 +27,6 @@ columns = [
 # تحويل البيانات إلى DataFrame
 df = pd.DataFrame(data, columns=columns)
 
-account_managers = [
-    "Moath", "Ayman Tamimi", "Wesam", "Ammar", "Ayman Ghandurah", 
-    "Saleh", "Najla", "Tuqa", "Mohammad Al-Hamed", "Mohammad Al-Mutairi", 
-    "Ahmad", "Iqbal", "Anas", "Mohammad Gharibeh"
-]
-
-edited_df = st.data_editor(
-    df,
-    column_config={
-        "Account Manager": st.column_config.SelectboxColumn(
-            "Account Manager",
-            options=account_managers
-        )
-    },
-    use_container_width=True,
-    num_rows="dynamic"
-)
-
-
 # تحويل التاريخ وإزالة الوقت
 df["Delivery Date"] = pd.to_datetime(df["Delivery Date"], format="%d-%m-%y").dt.date
 
