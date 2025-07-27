@@ -7,19 +7,8 @@ from email.mime.text import MIMEText
 st.set_page_config(layout="wide")
 st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300)
 
-st.title("C-arm Demo Tracking System")
-st.markdown("### قائمة الأجهزة التجريبية في المملكة")
-
-# جعل الجدول قابل للتعديل
-edited_df = st.data_editor(
-    df,
-    num_rows="dynamic",
-    use_container_width=True,
-    column_config={
-        "Account Manager": st.column_config.SelectboxColumn("Account Manager", options=account_managers),
-        "Device Status (Broken?)": st.column_config.CheckboxColumn("Broken?"),
-    }
-)
+st.title("C-Arm Dashboard")
+st.markdown("### CAD")
 
 # بيانات الأجهزة
 data = [
