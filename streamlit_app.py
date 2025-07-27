@@ -6,7 +6,6 @@ from datetime import datetime
 st.image( "https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300 )
 
 # بيانات الأجهزة
-
 data = [
     ["Cios Select FD VA20", "22-07-25", 20087, "warehouse", "", ""],
     ["Cios Connect", "25-05-25", 21521, "Al-Rawdhah Hospital (until we submit Cios Select)", "Ayman Tamimi", ""],
@@ -28,6 +27,25 @@ columns = [
 # تحويل البيانات إلى DataFrame
 df = pd.DataFrame(data, columns=columns)
 
+account_managers = [
+    "Moath", "Ayman Tamimi", "Wesam", "Ammar", "Ayman Ghandurah", 
+    "Saleh", "Najla", "Tuqa", "Mohammad Al-Hamed", "Mohammad Al-Mutairi", 
+    "Ahmad", "Iqbal", "Anas", "Mohammad Gharibeh"
+]
+
+edited_df = st.data_editor(
+    df,
+    column_config={
+        "Account Manager": st.column_config.SelectboxColumn(
+            "Account Manager",
+            options=account_managers
+        )
+    },
+    use_container_width=True,
+    num_rows="dynamic"
+)
+
+
 # تحويل التاريخ وإزالة الوقت
 df["Delivery Date"] = pd.to_datetime(df["Delivery Date"], format="%d-%m-%y").dt.date
 
@@ -42,13 +60,6 @@ df["Days in Site"] = df.apply(
 # إضافة عمود "هل الجهاز خربان؟" (قابل للتعديل)
 df["Is Broken?"] = False
 
-account_managers = [
-    "Moath", "Ayman Tamimi", "Wesam", "Ammar", "Ayman Ghandurah", 
-    "Saleh", "Najla", "Tuqa", "Mohammad Al-Hamed", "Mohammad Al-Mutairi", 
-    "Ahmad", "Iqbal", "Anas", "Mohammad Gharibeh"
-]
-selected_manager = st.selectbox("Select Account Manager", account_managers)
-
 # عنوان الصفحة
 st.set_page_config(layout="wide")
 st.title("📋C-Arm Demo (CAD)")
@@ -56,14 +67,6 @@ st.title("📋C-Arm Demo (CAD)")
 # عرض الجدول قابل للتعديل
 edited_df = st.data_editor(
     df,
-    use_container_width=True,
-    num_rows="dynamic"
-)
-
-filtered_df = df[df["Account Manager"] == selected_manager]
-
-edited_df = st.data_editor(
-    filtered_df,
     use_container_width=True,
     num_rows="dynamic"
 )
