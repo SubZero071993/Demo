@@ -70,26 +70,26 @@ st.dataframe(styled_df, use_container_width=True)
 st.set_page_config(layout="wide")
 st.title("📄 Brochures and Configurations for C-arm Devices") 
 devices = [
-         {
-                "Device": "Cios Connect", 
-                "Brochure": "https://example.com/connect_brochure.pdf",
-                "Configuration": "https://example.com/connect_config.pdf"
-            },
-            {
-                "Device": "Cios Fusion",
-                "Brochure": "https://example.com/fusion_brochure.pdf",
-                "Configuration": "https://example.com/fusion_config.pdf"
-            },
-            {
-                "Device": "Cios Alpha VA30",
-                "Brochure": "https://example.com/alpha_brochure.pdf",
-                "Configuration": "https://example.com/alpha_config.pdf"
-            }, 
-            {
-                 "Device": "Cios Spin VA30",
-                "Brochure": "Link", 
-                "Configuration": "Link",
-            },
+    {
+        "Device": "Cios Connect",
+        "Brochure": "",  # Add PDF link here
+        "Configuration": ""  # Add PDF link here
+    },
+    {
+        "Device": "Cios Fusion",
+        "Brochure": "",
+        "Configuration": ""
+    },
+    {
+        "Device": "Cios Alpha VA30",
+        "Brochure": "",
+        "Configuration": ""
+    },
+    {
+        "Device": "Cios Spin",
+        "Brochure": "",
+        "Configuration": ""
+    }
 ]
 
 df = pd.DataFrame(devices)
