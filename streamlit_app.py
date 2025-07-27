@@ -7,14 +7,6 @@ st.image( "https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthine
 
 # بيانات الأجهزة
 
-account_managers = [
-    "Moath", "Ayman Tamimi", "Wesam", "Ammar", "Ayman Ghandurah", 
-    "Saleh", "Najla", "Tuqa", "Mohammad Al-Hamed", "Mohammad Al-Mutairi", 
-    "Ahmad", "Iqbal", "Anas", "Mohammad Gharibeh"
-]
-selected_manager = st.selectbox("Select Account Manager", account_managers)
-
-
 data = [
     ["Cios Select FD VA20", "22-07-25", 20087, "warehouse", "", ""],
     ["Cios Connect", "25-05-25", 21521, "Al-Rawdhah Hospital (until we submit Cios Select)", "Ayman Tamimi", ""],
@@ -49,6 +41,13 @@ df["Days in Site"] = df.apply(
 
 # إضافة عمود "هل الجهاز خربان؟" (قابل للتعديل)
 df["Is Broken?"] = False
+
+account_managers = [
+    "Moath", "Ayman Tamimi", "Wesam", "Ammar", "Ayman Ghandurah", 
+    "Saleh", "Najla", "Tuqa", "Mohammad Al-Hamed", "Mohammad Al-Mutairi", 
+    "Ahmad", "Iqbal", "Anas", "Mohammad Gharibeh"
+]
+selected_manager = st.selectbox("Select Account Manager", account_managers)
 
 # عنوان الصفحة
 st.set_page_config(layout="wide")
