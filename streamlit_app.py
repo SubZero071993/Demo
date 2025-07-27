@@ -59,6 +59,6 @@ def highlight_row(row):
     else:
         return [""] * len(row)
 
-st.markdown("### 🎨 عرض الجدول بتنسيق لوني")
+st.markdown("### 🎨 Final Results:")
 styled_df = edited_df.style.apply(highlight_row, axis=1)
 st.dataframe(styled_df, use_container_width=True)
