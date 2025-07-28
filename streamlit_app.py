@@ -123,7 +123,7 @@ from email.mime.multipart import MIMEMultipart
 SMTP_SERVER = "smtp-relay.brevo.com"
 SMTP_PORT = 587
 SMTP_USERNAME = "934e56001@smtp-brevo.com"
-SMTP_PASSWORD = "Lf9sCKyvh7ImpJc0"  # هذا هو Master Password
+SMTP_PASSWORD = "Lf9sCKyvh7ImpJcO"  # هذا هو Master Password
 
 # بيانات الإيميل
 sender_email = SMTP_USERNAME
