@@ -127,7 +127,7 @@ SMTP_PASSWORD = "Lf9sCKyvh7ImpJcO"  # هذا هو Master Password
 
 # بيانات الإيميل
 sender_email = SMTP_USERNAME
-receiver_email = "hossam.al-zahrani@siemens-healthineers.com"
+receiver_email = "h-h-z@hotmail.com"
 subject = "🔔 C-arm Device Notification"
 body = "Hello Hossam,\n\nThis is a test email from your Streamlit app.\n\nRegards,\nStreamlit Bot"
 
