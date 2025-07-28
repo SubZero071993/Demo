@@ -114,5 +114,4 @@ for device in devices:
         f"{icon_config} Configuration: [Click here]({device['Configuration']})"
     )
 
-st.write("Developed by Hossam Al-Zahrani
-        AT Product Manager")
+st.write("Developed by Hossam Al-Zahrani/n AT Product Manager")
