@@ -113,3 +113,5 @@ for device in devices:
         f"{icon_brochure} Brochure: [Click here]({device['Brochure']})  \n"
         f"{icon_config} Configuration: [Click here]({device['Configuration']})"
     )
+
+st.write("Developed by Hossam Al-Zahrani")
