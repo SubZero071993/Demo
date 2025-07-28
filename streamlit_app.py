@@ -83,7 +83,7 @@ devices = [
     {
         "Device": "Cios Connect",
         "Brochure": "https://example.com/cios_connect_brochure.pdf",
-        "Configuration": "https://example.com/cios_connect_config.pdf"
+        "Configuration": "https://smallpdf.com/file#s=57bb6fa2-cba3-4971-bbce-0049462e9165"
     },
     {
         "Device": "Cios Fusion",
