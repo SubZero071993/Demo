@@ -114,4 +114,6 @@ for device in devices:
         f"{icon_config} Configuration: [Click here]({device['Configuration']})"
     )
 
+
+
 st.markdown("Developed by **Hossam Al-Zahrani**  \nAT Product Manager")
