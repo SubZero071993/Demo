@@ -104,7 +104,7 @@ devices = [
     {
         "Device": "Cios Spin",
         "Brochure": "https://example.com/cios_spin_brochure.pdf",
-        "Configuration": "https://example.com/cios_spin_config.pdf"
+        "Configuration": "https://smallpdf.com/file#s=9a377c59-e004-4804-8d3c-6c8f2e53309d"
     }
 ]
 
