@@ -5,7 +5,7 @@ from datetime import datetime
 #Logo
 st.image( "https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300 )
 
-# بيانات الأجهزة
+# Devices Data
 data = [
     ["Cios Select FD VA20", "22-07-25", 20087, "warehouse", "", ""],
     ["Cios Connect", "25-05-25", 21521, "Al-Rawdhah Hospital (until we submit Cios Select)", "Ayman Tamimi", ""],
@@ -24,13 +24,13 @@ columns = [
     "Application Specialist"
 ]
 
-# تحويل البيانات إلى DataFrame
+# Transforming Data into DataFrame
 df = pd.DataFrame(data, columns=columns)
 
-# تحويل التاريخ وإزالة الوقت
+# Date
 df["Delivery Date"] = pd.to_datetime(df["Delivery Date"], format="%d-%m-%y").dt.date
 
-# حساب عدد الأيام في الموقع
+# Calculating days in the site
 today = datetime(2025, 7, 27).date()
 df["Days in Site"] = df.apply(
     lambda row: (pd.to_datetime(today) - pd.to_datetime(row["Delivery Date"])).days 
@@ -38,14 +38,14 @@ df["Days in Site"] = df.apply(
     axis=1
 )
 
-# إضافة عمود "هل الجهاز خربان؟" (قابل للتعديل)
-df["Is Broken?"] = False
+# Malfunctioning option
+df["Is it malfunctioned?"] = False
 
-# عنوان الصفحة
+# Page title
 st.set_page_config(layout="wide")
 st.title("📋C-Arm Demo (CAD)")
 
-# عرض الجدول قابل للتعديل
+# Editiable
 edited_df = st.data_editor(
     df,
     column_config={
@@ -62,7 +62,7 @@ edited_df = st.data_editor(
     num_rows="dynamic"
 )
 
-# ====== 🎨 تنسيق الألوان ======
+# ====== 🎨 Colors ======
 def highlight_row(row):
     if row["Is Broken?"]:
         return ["background-color: lightgray"] * len(row)
