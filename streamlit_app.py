@@ -71,7 +71,7 @@ def highlight_row(row):
     if row["Is Broken?"]:
         return ["background-color: lightgray"] * len(row)
     elif days > 30:
-        return ["background-color: #FFA07A"] * len(row)
+        return ["background-color: #FF6F61"] * len(row)
     elif days > 14:
         return ["background-color: lightyellow"] * len(row)
     elif str(row["Current Location"]).strip().lower() == "warehouse":
