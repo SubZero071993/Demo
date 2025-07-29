@@ -5,7 +5,7 @@ from datetime import datetime
 #Logo
 st.image( "https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300 )
 
-# Devices Data
+# بيانات الأجهزة
 data = [
     ["Cios Select FD VA20", "22-07-25", 20087, "warehouse", "", ""],
     ["Cios Connect", "25-05-25", 21521, "Al-Rawdhah Hospital (until we submit Cios Select)", "Ayman Tamimi", ""],
@@ -24,13 +24,13 @@ columns = [
     "Application Specialist"
 ]
 
-# Transforming Data into DataFrame
+# تحويل البيانات إلى DataFrame
 df = pd.DataFrame(data, columns=columns)
 
-# Date
+# تحويل التاريخ وإزالة الوقت
 df["Delivery Date"] = pd.to_datetime(df["Delivery Date"], format="%d-%m-%y").dt.date
 
-# Calculating days in the site
+# حساب عدد الأيام في الموقع
 today = datetime(2025, 7, 27).date()
 df["Days in Site"] = df.apply(
     lambda row: (pd.to_datetime(today) - pd.to_datetime(row["Delivery Date"])).days 
@@ -38,14 +38,14 @@ df["Days in Site"] = df.apply(
     axis=1
 )
 
-# Malfunctioning option
-df["Is it malfunctioned?"] = False
+# إضافة عمود "هل الجهاز خربان؟" (قابل للتعديل)
+df["Is Broken?"] = False
 
-# Page title
+# عنوان الصفحة
 st.set_page_config(layout="wide")
 st.title("📋C-Arm Demo (CAD)")
 
-# Editiable
+# عرض الجدول قابل للتعديل
 edited_df = st.data_editor(
     df,
     column_config={
@@ -62,7 +62,7 @@ edited_df = st.data_editor(
     num_rows="dynamic"
 )
 
-# ====== 🎨 Colors ======
+# ====== 🎨 تنسيق الألوان ======
 def highlight_row(row):
     if row["Is Broken?"]:
         return ["background-color: lightgray"] * len(row)
@@ -82,23 +82,23 @@ st.title("📎Brochures and Configurations ")
 devices = [
     {
         "Device": "Cios Connect",
-        "Brochure": "https://smallpdf.com/file#s=a25c199b-1739-4745-a81a-e1725caba96c",
-        "Configuration": "https://smallpdf.com/file#s=57bb6fa2-cba3-4971-bbce-0049462e9165"
+        "Brochure": "https://example.com/cios_connect_brochure.pdf",
+        "Configuration": "https://example.com/cios_connect_config.pdf"
     },
     {
         "Device": "Cios Fusion",
-        "Brochure": "https://smallpdf.com/file#s=cec6d7a8-4b7a-47c5-bfa2-a098da63f422",
-        "Configuration": "https://smallpdf.com/file#s=dfd03daa-a6f0-4ad7-84a9-235b585cbf38"
+        "Brochure": "https://example.com/cios_fusion_brochure.pdf",
+        "Configuration": "https://example.com/cios_fusion_config.pdf"
     },
     {
         "Device": "Cios Alpha VA30",
-        "Brochure": "https://smallpdf.com/file#s=0371cf4c-e55e-48bb-82bb-ffd6aa2cf9d2",
-        "Configuration": "https://smallpdf.com/file#s=b07cc63b-0327-4b5a-b2f6-59fc2ec66e2b"
+        "Brochure": "https://example.com/cios_alpha_va30_brochure.pdf",
+        "Configuration": "https://example.com/cios_alpha_va30_config.pdf"
     },
     {
         "Device": "Cios Spin",
-        "Brochure": "https://smallpdf.com/file#s=3b4c2ced-54cb-48d4-8124-9e9f8beb5f15",
-        "Configuration": "https://smallpdf.com/file#s=9a377c59-e004-4804-8d3c-6c8f2e53309d"
+        "Brochure": "https://example.com/cios_spin_brochure.pdf",
+        "Configuration": "https://example.com/cios_spin_config.pdf"
     }
 ]
 
@@ -113,7 +113,4 @@ for device in devices:
         f"{icon_brochure} Brochure: [Click here]({device['Brochure']})  \n"
         f"{icon_config} Configuration: [Click here]({device['Configuration']})"
     )
-
-
-
-st.markdown("Developed by **Hossam Al-Zahrani**  \nAT Product Manager")
+                
