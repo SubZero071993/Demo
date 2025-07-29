@@ -64,11 +64,15 @@ edited_df = st.data_editor(
 
 # ====== 🎨 تنسيق الألوان ======
 def highlight_row(row):
+    try:
+        days = float(row["Days in Site"])
+    except:
+        days = 0
     if row["Is Broken?"]:
         return ["background-color: lightgray"] * len(row)
-    elif isinstance(row["Days in Site"], (int, float)) and row["Days in Site"] > 30:
-        return ["background-color: lightcoral"] * len(row)  # Use lightcoral for red
-    elif isinstance(row["Days in Site"], (int, float)) and row["Days in Site"] > 14:
+    elif days > 30:
+        return ["background-color: lightred"] * len(row)
+    elif days > 14:
         return ["background-color: lightyellow"] * len(row)
     elif str(row["Current Location"]).strip().lower() == "warehouse":
         return ["background-color: lightgreen"] * len(row)
