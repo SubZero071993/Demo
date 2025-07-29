@@ -117,8 +117,5 @@ for device in devices:
     st.markdown(f"### {device['Device']}")
     st.markdown(
         f"{icon_brochure} Brochure: [Click here]({device['Brochure']})  \n"
-
-st.markdown("Developed by Hossam Al-Zahrani  \nAT Product Manager)
-        f"{icon_config} Configuration: [Click here]({device['Configuration']})"
     )
                 
