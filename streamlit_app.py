@@ -39,7 +39,7 @@ df["Days in Site"] = df.apply(
 )
 
 # إضافة عمود "هل الجهاز خربان؟" (قابل للتعديل)
-df["Is Broken?"] = False
+df["malfunctioned?"] = False
 
 # عنوان الصفحة
 st.set_page_config(layout="wide")
