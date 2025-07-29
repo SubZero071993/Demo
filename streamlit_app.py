@@ -68,7 +68,7 @@ def highlight_row(row):
         days = float(row["Days in Site"])
     except:
         days = 0
-    if row["Is Broken?"]:
+    if row["Malfunction?"]:
         return ["background-color: lightgray"] * len(row)
     elif days > 30:
         return ["background-color: #FF6F61"] * len(row)
