@@ -1,2 +1,2 @@
-import Home.py 
+import Home
 Home.run()
