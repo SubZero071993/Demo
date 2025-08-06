@@ -1,4 +1,7 @@
 import streamlit as st
+def run ():
+    st.title("Welcome to CAD")
+    st.write("Home Page")
 
 # إعداد الصفحة
 st.set_page_config(page_title="Clinical Assets Dashboard", layout="wide")
