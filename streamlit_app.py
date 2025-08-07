@@ -37,26 +37,16 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown(
-    """
-    <div style="width: 100%; display: flex; align-items: center; justify-content: space-between;">
-        <!-- شعار سيمنس على اليسار -->
-        <div style="flex: 1;">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens-logo.svg" width="120">
-        </div>
+col1, col2, col3 = st.columns([1, 2, 1])  # تقسيم الصفحة إلى 3 أعمدة بنسبة مختلفة
 
-        <!-- شعار الكاد في المنتصف -->
-        <div style="flex: 1; text-align: center;">
-            <img src="https://iili.io/FiS0iNa.png" width="130">
-        </div>
+# الشعار اليسار (سيمنس)
+with col1:
+    st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens-logo.svg", width=120)
 
-        <!-- عنصر فارغ على اليمين لتوازن التصميم -->
-        <div style="flex: 1;">
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+# الشعار في الوسط (الكاد)
+with col2:
+    st.image("https://iili.io/FiS0iNa.png", width=150)
+
 
 selected_page = st.session_state.get("selected_page")
 
