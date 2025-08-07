@@ -1,7 +1,7 @@
 import streamlit as st
 
 st.set_page_config(layout="wide")
-st.title("📎Brochures and Configurations ") 
+st.title("📎Documents ") 
 devices = [
     {
         "Device": "Cios Connect",
