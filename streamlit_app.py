@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.image("https://i.postimg.cc/0ykNJ8rf/Adobe-Express-file.png", width=500)
+st.image("https://i.postimg.cc/d3FFPByB/85-EEED00-2-AC8-4201-BDB1-9978-B32000-D9-removebg-preview.png", width=100)
 
 st.set_page_config(layout="wide")
 st.title("📎Documents ") 
