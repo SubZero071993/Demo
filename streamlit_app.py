@@ -1,46 +1,113 @@
 import streamlit as st
+import base64
 
-st.image("https://i.postimg.cc/d3FFPByB/85-EEED00-2-AC8-4201-BDB1-9978-B32000-D9-removebg-preview.png", width=300)
+st.set_page_config(page_title="CAD Portal", layout="wide")
 
-st.set_page_config(layout="wide")
-st.title("📎Documents ") 
-devices = [
-    {
-        "Device": "Cios Connect",
-        "Brochure": "https://smallpdf.com/file#s=a25c199b-1739-4745-a81a-e1725caba96c",
-        "Configuration": "https://smallpdf.com/file#s=57bb6fa2-cba3-4971-bbce-0049462e9165",
-        "Data Sheet": "https://smallpdf.com/file#s=57bb6fa2-cba3-4971-bbce-0049462e9165" 
-    },
-    {
-        "Device": "Cios Fusion",
-        "Brochure": "https://smallpdf.com/file#s=cec6d7a8-4b7a-47c5-bfa2-a098da63f422",
-        "Configuration": "https://smallpdf.com/file#s=dfd03daa-a6f0-4ad7-84a9-235b585cbf38",
-        "Data Sheet": "https://smallpdf.com/file#s=57bb6fa2-cba3-4971-bbce-0049462e9165" 
-    },
-    {
-        "Device": "Cios Alpha VA30",
-        "Brochure": "https://smallpdf.com/file#s=0371cf4c-e55e-48bb-82bb-ffd6aa2cf9d2",
-        "Configuration": "https://smallpdf.com/file#s=b07cc63b-0327-4b5a-b2f6-59fc2ec66e2b",
-        "Data Sheet": "https://smallpdf.com/file#s=57bb6fa2-cba3-4971-bbce-0049462e9165" 
-    },
-    {
-        "Device": "Cios Spin",
-        "Brochure": "https://smallpdf.com/file#s=3b4c2ced-54cb-48d4-8124-9e9f8beb5f15",
-        "Configuration": "https://smallpdf.com/file#s=9a377c59-e004-4804-8d3c-6c8f2e53309d",
-        "Data Sheet": "https://smallpdf.com/file#s=57bb6fa2-cba3-4971-bbce-0049462e9165" 
+
+# CSS for hover effect
+st.markdown("""
+    <style>
+    .circle-container {
+        display: flex;
+        justify-content: center;
+        gap: 50px;
+        margin-top: 50px;
+        flex-wrap: wrap;
     }
-]
+    .circle-button {
+        background-color: #FF6F00;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        font-size: 18px;
+        text-align: center;
+        line-height: 1.5;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .circle-button:hover {
+        transform: scale(1.2);
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-import streamlit as st
+col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns([10, 1, 10, 1, 1, 1, 1, 1, 1, 1])  # تقسيم الصفحة إلى 10 أعمدة بنسبة مختلفة
 
-icon_data = "📄"
-icon_config = "🛠️"
-icon_brochure = "📣"
+# الشعار اليسار (سيمنس)
+with col1:
+    st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300)
 
-for device in devices:
-    st.markdown(f"### {device['Device']}")
-    st.markdown(
-        f"{icon_brochure} Brochure: [Click here]({device['Brochure']})  \n"
-        f"{icon_config} Configuration: [Click here]({device['Configuration']}) <br> {icon_data} Data Sheet: [Click here]({device['Data Sheet']})",
-        unsafe_allow_html=True  
-    )
+# الشعار في الوسط (الكاد)
+with col3:
+    st.image("https://iili.io/FiS0iNa.png", width=300)
+
+
+selected_page = st.session_state.get("selected_page")
+
+# Circle buttons
+if not selected_page:
+    st.markdown("""
+        <div class="circle-container">
+            <form action="" method="post">
+                <button name="page" value="requests" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=64nKv4tDb3Qt&format=png&color=000000" width="60"><br>Requests
+                </button>
+            </form>
+            <form action="" method="post">
+                <button name="page" value="schedule" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=117507&format=png&color=000000" width="60"><br>Schedule
+                </button>
+            </form>
+            <form action="" method="post">
+                <button name="page" value="documents" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=42415&format=png&color=000000" width="60"><br>Documents
+                </button>
+            </form>
+            <form action="" method="post">
+                <button name="page" value="3d" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=5WoqJ6SAzPMX&format=png&color=000000" width="60"><br>3D
+                </button>
+            </form>
+            <form action="" method="post">
+                <button name="page" value="maintenance" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=102356&format=png&color=000000" width="60"><br>Maintenance
+                </button>
+            </form>
+        </div>
+    """, unsafe_allow_html=True)
+
+# Detect click
+if "page" in st.query_params:
+    selected_page = st.query_params["page"]
+    st.session_state["selected_page"] = selected_page
+
+# Example page logic
+selected_page = st.session_state.get("selected_page")
+
+if selected_page == "schedule":
+    st.markdown("<h2>📅 جدول الأجهزة المجربة</h2>", unsafe_allow_html=True)
+   
+    # كود الجدول اللي تبي
+    import pandas as pd
+    data = {
+        "Model": ["Cios Alpha", "Cios Select"],
+        "Delivery Date": ["2025-07-01", "2025-07-15"],
+        "Location": ["Riyadh", "Jeddah"]
+    }
+    df = pd.DataFrame(data)
+    st.dataframe(df)
+
+elif selected_page == "requests":
+    st.write("📨 هنا تقدر تتابع الطلبات")
+elif selected_page == "documents":
+    st.write("📄 مستندات الجهاز")
+elif selected_page == "3d":
+    st.write("🧊 ملفات 3D الخاصة بالجهاز")
+elif selected_page == "maintenance":
+    st.write("🔧 سجل الصيانة")
