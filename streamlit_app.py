@@ -3,12 +3,6 @@ import base64
 
 st.set_page_config(page_title="CAD Portal", layout="wide")
 
-# Load images
-def load_image(path, width):
-    with open(path, "rb") as f:
-        data = f.read()
-        encoded = base64.b64encode(data).decode()
-    return f'<img src="data:image/png;base64,{encoded}" width="{width}"/>'
 
 # CSS for hover effect
 st.markdown("""
@@ -46,7 +40,7 @@ st.markdown("""
 # Layout: Siemens + CAD logo
 col1, col2 = st.columns([1, 2])
 with col1:
-    st.markdown(load_image("siemens_logo.png", 120), unsafe_allow_html=True)
+    st.markdown(load_image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", 120), unsafe_allow_html=True)
     st.markdown(load_image("cad_logo.png", 120), unsafe_allow_html=True)
 with col2:
     st.markdown("<h1 style='margin-top: 20px;'>مرحبا بك في بوابة الكاد</h1>", unsafe_allow_html=True)
