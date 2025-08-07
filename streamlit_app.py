@@ -41,7 +41,7 @@ st.markdown("""
 st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300)
 
 # Page logic
-selected_page = st.session_state.get("selected_page", "")
+<a href="https://freeimage.host/"><img src="https://iili.io/FiS0iNa.png" alt="FiS0iNa.png" border="0" /></a>
 
 # Circle buttons
 if not selected_page:
