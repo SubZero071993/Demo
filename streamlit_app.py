@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.image("https://i.postimg.cc/vB9fTQSz/85-EEED00-2-AC8-4201-BDB1-9978-B32000-D9-removebg-preview.png", width=200)
+st.image("https://i.postimg.cc/vB9fTQSz/85-EEED00-2-AC8-4201-BDB1-9978-B32000-D9-removebg-preview.png", width=1000)
 
 st.set_page_config(layout="wide")
 st.title("📎Documents ") 
