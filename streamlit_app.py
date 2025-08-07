@@ -1,81 +1,89 @@
 import streamlit as st
-from streamlit_option_menu import option_menu
-from PIL import Image
+import base64
 
-# إعداد الصفحة
-st.set_page_config(layout="wide")
-st.markdown("<style>body {background-color: #f5f5f5;}</style>", unsafe_allow_html=True)
+st.set_page_config(page_title="CAD Portal", layout="wide")
 
-# شعارات في الجانب الأيسر
-col1, col2 = st.columns([1, 5])
+# Load images
+def load_image(path, width):
+    with open(path, "rb") as f:
+        data = f.read()
+        encoded = base64.b64encode(data).decode()
+    return f'<img src="data:image/png;base64,{encoded}" width="{width}"/>'
+
+# CSS for hover effect
+st.markdown("""
+    <style>
+    .circle-container {
+        display: flex;
+        justify-content: center;
+        gap: 50px;
+        margin-top: 50px;
+        flex-wrap: wrap;
+    }
+    .circle-button {
+        background-color: #FF6F00;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        font-size: 18px;
+        text-align: center;
+        line-height: 1.5;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .circle-button:hover {
+        transform: scale(1.2);
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Layout: Siemens + CAD logo
+col1, col2 = st.columns([1, 2])
 with col1:
-    siemens_logo = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Siemens-logo.svg/2560px-Siemens-logo.svg.png"
-    st.image(siemens_logo, width=150)
-    st.image("logo_placeholder.png", caption="CAD Project", width=150)  # شعار الكاد
-
+    st.markdown(load_image("siemens_logo.png", 120), unsafe_allow_html=True)
+    st.markdown(load_image("cad_logo.png", 120), unsafe_allow_html=True)
 with col2:
-    st.markdown("## ")
-    st.markdown("## ")
-    st.markdown("## ")
+    st.markdown("<h1 style='margin-top: 20px;'>مرحبا بك في بوابة الكاد</h1>", unsafe_allow_html=True)
 
-    # تصميم الدوائر
-    st.markdown(
-        '''
-        <style>
-        .circle-container {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 50px;
-        }
-        .circle {
-            width: 150px;
-            height: 150px;
-            background-color: orange;
-            color: white;
-            font-weight: bold;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            text-align: center;
-            cursor: pointer;
-        }
-        .circle:hover {
-            transform: scale(1.3);
-        }
-        </style>
+# Page logic
+selected_page = st.session_state.get("selected_page", "")
+
+# Circle buttons
+if not selected_page:
+    st.markdown("""
         <div class="circle-container">
-            <div class="circle" onclick="window.location.href='/?selected=requests'">📩<br>Requests</div>
-            <div class="circle" onclick="window.location.href='/?selected=schedule'">📅<br>Schedule</div>
-            <div class="circle" onclick="window.location.href='/?selected=documents'">📄<br>Documents</div>
-            <div class="circle" onclick="window.location.href='/?selected=3d'">🧊<br>3D</div>
-            <div class="circle" onclick="window.location.href='/?selected=maintenance'">🔧<br>Maintenance</div>
+            <form action="" method="post"><button name="page" value="requests" class="circle-button">📧<br>Requests</button></form>
+            <form action="" method="post"><button name="page" value="schedule" class="circle-button">🗓️<br>Schedule</button></form>
+            <form action="" method="post"><button name="page" value="documents" class="circle-button">📄<br>Documents</button></form>
+            <form action="" method="post"><button name="page" value="3d" class="circle-button">🧊<br>3D</button></form>
+            <form action="" method="post"><button name="page" value="maintenance" class="circle-button">🔧<br>Maintenance</button></form>
         </div>
-        ''',
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
-# التعامل مع التنقل بين الصفحات
-query_params = st.experimental_get_query_params()
-selected = query_params.get("selected", [None])[0]
+# Detect click
+if "page" in st.query_params:
+    selected_page = st.query_params["page"]
+    st.session_state["selected_page"] = selected_page
 
-if selected == "requests":
-    st.header("📩 Requests Page")
-    st.write("هنا تقدر ترسل طلبات معينة.")
-
-elif selected == "schedule":
-    st.header("📅 Schedule Page")
-    st.write("هنا الجدول الكامل للأجهزة.")
-
-elif selected == "documents":
-    st.header("📄 Documents Page")
-    st.write("هنا ملفات PDF و Word للمشروع.")
-
-elif selected == "3d":
-    st.header("🧊 3D Viewer")
-    st.write("هنا نموذج ثلاثي الأبعاد للأجهزة.")
-
-elif selected == "maintenance":
-    st.header("🔧 Maintenance Page")
-    st.write("هنا تفاصيل أعطال الأجهزة السابقة.")
+# Page content
+if selected_page == "requests":
+    st.header("📧 طلبات")
+    st.write("صفحة الطلبات هنا...")
+elif selected_page == "schedule":
+    st.header("🗓️ الجدول")
+    st.write("صفحة الجدول هنا...")
+elif selected_page == "documents":
+    st.header("📄 مستندات")
+    st.write("صفحة المستندات هنا...")
+elif selected_page == "3d":
+    st.header("🧊 عرض ثلاثي الأبعاد")
+    st.write("صفحة الـ 3D هنا...")
+elif selected_page == "maintenance":
+    st.header("🔧 صيانة")
+    st.write("صفحة الأعطال هنا...")
