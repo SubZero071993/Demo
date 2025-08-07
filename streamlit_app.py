@@ -1,6 +1,6 @@
 import streamlit as st
 
-str.image:("https://imgur.com/a/LnHRGWY", width==200)
+str.image:("https://imgur.com/a/LnHRGWY", width=50)
 
 st.set_page_config(layout="wide")
 st.title("📎Documents ") 
