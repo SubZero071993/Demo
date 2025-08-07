@@ -47,11 +47,31 @@ selected_page = st.session_state.get("selected_page", "")
 if not selected_page:
     st.markdown("""
         <div class="circle-container">
-            <form action="" method="post"><button name="page" value="requests" class="circle-button">📧<br>Requests</button></form>
-            <form action="" method="post"><button name="page" value="schedule" class="circle-button">🗓️<br>Schedule</button></form>
-            <form action="" method="post"><button name="page" value="documents" class="circle-button">📄<br>Documents</button></form>
-            <form action="" method="post"><button name="page" value="3d" class="circle-button">🧊<br>3D</button></form>
-            <form action="" method="post"><button name="page" value="maintenance" class="circle-button">🔧<br>Maintenance</button></form>
+            <form action="" method="post">
+                <button name="page" value="requests" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=64nKv4tDb3Qt&format=png&color=000000" width="40"><br>Requests
+                </button>
+            </form>
+            <form action="" method="post">
+                <button name="page" value="schedule" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=117507&format=png&color=000000" width="40"><br>Schedule
+                </button>
+            </form>
+            <form action="" method="post">
+                <button name="page" value="documents" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=42415&format=png&color=000000" width="40"><br>Documents
+                </button>
+            </form>
+            <form action="" method="post">
+                <button name="page" value="3d" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=5WoqJ6SAzPMX&format=png&color=000000" width="40"><br>3D
+                </button>
+            </form>
+            <form action="" method="post">
+                <button name="page" value="maintenance" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=102356&format=png&color=000000" width="40"><br>Maintenance
+                </button>
+            </form>
         </div>
     """, unsafe_allow_html=True)
 
