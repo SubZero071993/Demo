@@ -41,10 +41,10 @@ col1, col2, col3 = st.columns([1, 2, 1])  # تقسيم الصفحة إلى 3 أ�
 
 # الشعار اليسار (سيمنس)
 with col1:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=120)
+    st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300)
 
 # الشعار في الوسط (الكاد)
-with col3:
+with col2:
     st.image("https://iili.io/FiS0iNa.png", width=150)
 
 
