@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.image("https://freeimage.host/i/FiPzjMN", width=200)
+[![FiPzjMN.md.png](https://iili.io/FiPzjMN.md.png)](https://freeimage.host/i/FiPzjMN)
 
 st.set_page_config(layout="wide")
 st.title("📎Documents ") 
