@@ -7,7 +7,7 @@ devices = [
         "Device": "Cios Connect",
         "Brochure": "https://smallpdf.com/file#s=a25c199b-1739-4745-a81a-e1725caba96c",
         "Configuration": "https://smallpdf.com/file#s=57bb6fa2-cba3-4971-bbce-0049462e9165"
-        "Data Sheet": "www.google.com"
+        "Data Sheet": "https://google.com" 
     },
     {
         "Device": "Cios Fusion",
