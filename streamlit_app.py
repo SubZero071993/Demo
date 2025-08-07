@@ -37,7 +37,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-col1, col2, col3, col4, col5, col6, col7, col8 = st.columns([10, 1, 10, 1, 1, 1, 1, 1])  # تقسيم الصفحة إلى 7 أعمدة بنسبة مختلفة
+col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns([10, 1, 10, 1, 1, 1, 1, 1, 1, 1])  # تقسيم الصفحة إلى 7 أعمدة بنسبة مختلفة
 
 # الشعار اليسار (سيمنس)
 with col1:
