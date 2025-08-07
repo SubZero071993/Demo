@@ -1,6 +1,8 @@
 import streamlit as st
 import base64
 
+st.title(" Clinical Assets Dashboard")
+
 st.set_page_config(page_title="CAD Portal", layout="wide")
 
 
