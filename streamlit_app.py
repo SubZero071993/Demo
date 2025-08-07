@@ -43,6 +43,8 @@ st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthinee
 # Page logic
 st.image("https://iili.io/FiS0iNa.png", width=200)
 
+selected_page = st.session_state.get("selected_page")
+
 # Circle buttons
 if not selected_page:
     st.markdown("""
