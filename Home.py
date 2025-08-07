@@ -1,69 +1,113 @@
 import streamlit as st
-def run ():
-    st.title("Welcome to CAD")
-    st.write("Home Page")
+import base64
 
-# إعداد الصفحة
-st.set_page_config(page_title="Clinical Assets Dashboard", layout="wide")
+st.set_page_config(page_title="CAD Portal", layout="wide")
 
-# تقسيم الصفحة إلى عمودين (يسار للشعارات، يمين للمحتوى)
-col1, col2 = st.columns([1, 2])
 
+# CSS for hover effect
+st.markdown("""
+    <style>
+    .circle-container {
+        display: flex;
+        justify-content: center;
+        gap: 50px;
+        margin-top: 50px;
+        flex-wrap: wrap;
+    }
+    .circle-button {
+        background-color: #FF6F00;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        font-size: 18px;
+        text-align: center;
+        line-height: 1.5;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .circle-button:hover {
+        transform: scale(1.2);
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns([10, 1, 10, 1, 1, 1, 1, 1, 1, 1])  # تقسيم الصفحة إلى 10 أعمدة بنسبة مختلفة
+
+# الشعار اليسار (سيمنس)
 with col1:
-    # شعار سيمنس
-    st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=150)  # غير المسار إذا لازم
+    st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300)
 
-    # شعار CAD
-    st.image("https://i.postimg.cc/Nj9t3KVL/image0.png", width=150)  # حط أي شعار مؤقت للمشروع
+# الشعار في الوسط (الكاد)
+with col3:
+    st.image("https://iili.io/FiS0iNa.png", width=300)
 
-    st.markdown("<br><br>", unsafe_allow_html=True)  # مسافة فاصلة
 
-    # نص ترحيبي
-    st.markdown(
-        "<h3 style='color:grey;'>C-Arm Dashboard</h3>",
-        unsafe_allow_html=True
-    )
+selected_page = st.session_state.get("selected_page")
 
-with col2:
-    st.markdown("### ")
+# Circle buttons
+if not selected_page:
+    st.markdown("""
+        <div class="circle-container">
+            <form action="" method="post">
+                <button name="page" value="requests" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=64nKv4tDb3Qt&format=png&color=000000" width="60"><br>Requests
+                </button>
+            </form>
+            <form action="" method="post">
+                <button name="page" value="schedule" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=117507&format=png&color=000000" width="60"><br>Schedule
+                </button>
+            </form>
+            <form action="" method="post">
+                <button name="page" value="documents" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=42415&format=png&color=000000" width="60"><br>Documents
+                </button>
+            </form>
+            <form action="" method="post">
+                <button name="page" value="3d" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=5WoqJ6SAzPMX&format=png&color=000000" width="60"><br>3D
+                </button>
+            </form>
+            <form action="" method="post">
+                <button name="page" value="maintenance" class="circle-button">
+                    <img src="https://img.icons8.com/?size=100&id=102356&format=png&color=000000" width="60"><br>Maintenance
+                </button>
+            </form>
+        </div>
+    """, unsafe_allow_html=True)
 
-    # ثلاثة أعمدة للدوائر
-    col_a, col_b, col_c = st.columns(3)
+# Detect click
+if "page" in st.query_params:
+    selected_page = st.query_params["page"]
+    st.session_state["selected_page"] = selected_page
 
-    circle_style = """
-        width:150px; height:150px; border-radius:50%;
-        background-color:#FF9800; display:flex;
-        justify-content:center; align-items:center;
-        color:white; font-weight:bold; font-size:18px;
-        transition: all 0.3s ease; margin:auto;
-    """
+# Example page logic
+selected_page = st.session_state.get("selected_page")
 
-    with col_a:
-        st.markdown(
-            f"""
-            <a href="?page=Schedule" style="text-decoration:none;">
-                <div style="{circle_style}">Schedule</div>
-            </a>
-            """,
-            unsafe_allow_html=True
-        )
+if selected_page == "schedule":
+    st.markdown("<h2>📅 جدول الأجهزة المجربة</h2>", unsafe_allow_html=True)
+   
+    # كود الجدول اللي تبي
+    import pandas as pd
+    data = {
+        "Model": ["Cios Alpha", "Cios Select"],
+        "Delivery Date": ["2025-07-01", "2025-07-15"],
+        "Location": ["Riyadh", "Jeddah"]
+    }
+    df = pd.DataFrame(data)
+    st.dataframe(df)
 
-    with col_b:
-        st.markdown(
-            f"""
-            <a href="?page=Maintenance" style="text-decoration:none;">
-                <div style="{circle_style}">Maintenance</div>
-            </a>
-            """,
-            unsafe_allow_html=True
-        )
-
-    with col_c:
-        st.markdown(
-            f"""
-            <a href="?page=Quiz" style="text-decoration:none;">
-                <div style="{circle_style}">Quiz</div>
-            </a>
-            """,
-            unsafe_allow_html=True
-        )
+elif selected_page == "requests":
+    st.write("📨 هنا تقدر تتابع الطلبات")
+elif selected_page == "documents":
+    st.write("📄 مستندات الجهاز")
+elif selected_page == "3d":
+    st.write("🧊 ملفات 3D الخاصة بالجهاز")
+elif selected_page == "maintenance":
+    st.write("🔧 سجل الصيانة")
