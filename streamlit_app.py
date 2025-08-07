@@ -80,19 +80,28 @@ if "page" in st.query_params:
     selected_page = st.query_params["page"]
     st.session_state["selected_page"] = selected_page
 
-# Page content
-if selected_page == "requests":
-    st.header("📧 طلبات")
-    st.write("صفحة الطلبات هنا...")
-elif selected_page == "schedule":
-    st.header("🗓️ الجدول")
-    st.write("صفحة الجدول هنا...")
+# Example page logic
+selected_page = st.session_state.get("selected_page")
+
+if selected_page == "schedule":
+    st.markdown("<h2>📅 جدول الأجهزة المجربة</h2>", unsafe_allow_html=True)
+   
+    # كود الجدول اللي تبي
+    import pandas as pd
+    data = {
+        "Model": ["Cios Alpha", "Cios Select"],
+        "Delivery Date": ["2025-07-01", "2025-07-15"],
+        "Location": ["Riyadh", "Jeddah"]
+    }
+    df = pd.DataFrame(data)
+    st.dataframe(df)
+
+elif selected_page == "requests":
+    st.write("📨 هنا تقدر تتابع الطلبات")
 elif selected_page == "documents":
-    st.header("📄 مستندات")
-    st.write("صفحة المستندات هنا...")
+    st.write("📄 مستندات الجهاز")
 elif selected_page == "3d":
-    st.header("🧊 عرض ثلاثي الأبعاد")
-    st.write("صفحة الـ 3D هنا...")
+    st.write("🧊 ملفات 3D الخاصة بالجهاز")
 elif selected_page == "maintenance":
-    st.header("🔧 صيانة")
-    st.write("صفحة الأعطال هنا...")
+    st.write("🔧 سجل الصيانة")
+
