@@ -39,13 +39,19 @@ st.markdown("""
 
 st.markdown(
     """
-    <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="width: 100%; display: flex; align-items: center; justify-content: space-between;">
         <!-- شعار سيمنس على اليسار -->
-        <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens-logo.svg" width="150"/>
+        <div style="flex: 1;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens-logo.svg" width="120">
+        </div>
 
-        <!-- شعار الكاد في النص -->
-        <div style="flex-grow: 1; text-align: center;">
-            <img src="https://iili.io/FiS0iNa.png" width="150"/>
+        <!-- شعار الكاد في المنتصف -->
+        <div style="flex: 1; text-align: center;">
+            <img src="https://iili.io/FiS0iNa.png" width="130">
+        </div>
+
+        <!-- عنصر فارغ على اليمين لتوازن التصميم -->
+        <div style="flex: 1;">
         </div>
     </div>
     """,
