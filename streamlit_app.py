@@ -37,6 +37,5 @@ for device in devices:
     st.markdown(
         f"{icon_brochure} Brochure: [Click here]({device['Brochure']})  \n"
         f"{icon_config} Configuration: [Click here]({device['Configuration']})"
-        if "Data Sheet" in device:
-            st.markdown(f"[Data Sheet]({device['Data Sheet']})"
+        f"{icon_data} Data Sheet: [Click here]({device['Data Sheet']})"    
     )
