@@ -7,6 +7,7 @@ devices = [
         "Device": "Cios Connect",
         "Brochure": "https://smallpdf.com/file#s=a25c199b-1739-4745-a81a-e1725caba96c",
         "Configuration": "https://smallpdf.com/file#s=57bb6fa2-cba3-4971-bbce-0049462e9165"
+        "Data Sheet": " "
     },
     {
         "Device": "Cios Fusion",
@@ -29,6 +30,7 @@ import streamlit as st
 
 icon_brochure = "📄"
 icon_config = "🛠️"
+icon_Data = " "
 
 for device in devices:
     st.markdown(f"### {device['Device']}")
