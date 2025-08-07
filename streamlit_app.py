@@ -38,12 +38,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Layout: Siemens + CAD logo
-col1, col2 = st.columns([1, 2])
-with col1:
-    st.markdown(load_image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", 120), 
-    st.markdown(load_image("cad_logo.png", 120), unsafe_allow_html=True)
-with col2:
-    st.markdown("<h1 style='margin-top: 20px;'>مرحبا بك في بوابة الكاد</h1>", unsafe_allow_html=True)
+st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=120)
 
 # Page logic
 selected_page = st.session_state.get("selected_page", "")
