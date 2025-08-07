@@ -49,27 +49,27 @@ if not selected_page:
         <div class="circle-container">
             <form action="" method="post">
                 <button name="page" value="requests" class="circle-button">
-                    <img src="https://img.icons8.com/?size=100&id=64nKv4tDb3Qt&format=png&color=000000" width="80"><br>Requests
+                    <img src="https://img.icons8.com/?size=100&id=64nKv4tDb3Qt&format=png&color=000000" width="60"><br>Requests
                 </button>
             </form>
             <form action="" method="post">
                 <button name="page" value="schedule" class="circle-button">
-                    <img src="https://img.icons8.com/?size=100&id=117507&format=png&color=000000" width="80"><br>Schedule
+                    <img src="https://img.icons8.com/?size=100&id=117507&format=png&color=000000" width="60"><br>Schedule
                 </button>
             </form>
             <form action="" method="post">
                 <button name="page" value="documents" class="circle-button">
-                    <img src="https://img.icons8.com/?size=100&id=42415&format=png&color=000000" width="80"><br>Documents
+                    <img src="https://img.icons8.com/?size=100&id=42415&format=png&color=000000" width="60"><br>Documents
                 </button>
             </form>
             <form action="" method="post">
                 <button name="page" value="3d" class="circle-button">
-                    <img src="https://img.icons8.com/?size=100&id=5WoqJ6SAzPMX&format=png&color=000000" width="80"><br>3D
+                    <img src="https://img.icons8.com/?size=100&id=5WoqJ6SAzPMX&format=png&color=000000" width="60"><br>3D
                 </button>
             </form>
             <form action="" method="post">
                 <button name="page" value="maintenance" class="circle-button">
-                    <img src="https://img.icons8.com/?size=100&id=102356&format=png&color=000000" width="80"><br>Maintenance
+                    <img src="https://img.icons8.com/?size=100&id=102356&format=png&color=000000" width="60"><br>Maintenance
                 </button>
             </form>
         </div>
