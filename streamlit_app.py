@@ -37,11 +37,20 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Layout: Siemens + CAD logo
-st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300)
+st.markdown(
+    """
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <!-- شعار سيمنس على اليسار -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens-logo.svg" width="150"/>
 
-# Page logic
-st.image("https://iili.io/FiS0iNa.png", width=200)
+        <!-- شعار الكاد في النص -->
+        <div style="flex-grow: 1; text-align: center;">
+            <img src="https://iili.io/FiS0iNa.png" width="150"/>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 selected_page = st.session_state.get("selected_page")
 
