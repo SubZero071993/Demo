@@ -30,7 +30,7 @@ import streamlit as st
 
 icon_brochure = "📄"
 icon_config = "🛠️"
-icon_Data = " "
+icon_data = " "
 
 for device in devices:
     st.markdown(f"### {device['Device']}")
