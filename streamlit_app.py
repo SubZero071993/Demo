@@ -1,6 +1,7 @@
 import streamlit as st
 import base64
 
+st.title(" Clinical Assets Dashboard (CAD)")
 
 st.set_page_config(page_title="CAD Portal", layout="wide")
 
@@ -43,8 +44,6 @@ col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns([10, 1,
 # الشعار اليسار (سيمنس)
 with col1:
     st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300)
-    
-st.title(" Clinical Assets Dashboard")
 
 # الشعار في الوسط (الكاد)
 with col3:
