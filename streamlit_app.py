@@ -44,7 +44,7 @@ with col1:
     st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=120)
 
 # الشعار في الوسط (الكاد)
-with col2:
+with col3:
     st.image("https://iili.io/FiS0iNa.png", width=150)
 
 
