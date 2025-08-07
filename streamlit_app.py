@@ -7,7 +7,7 @@ devices = [
         "Device": "Cios Connect",
         "Brochure": "https://smallpdf.com/file#s=a25c199b-1739-4745-a81a-e1725caba96c",
         "Configuration": "https://smallpdf.com/file#s=57bb6fa2-cba3-4971-bbce-0049462e9165"
-        "Data Sheet": "https://google.com" 
+        "Data Sheet": "https://example.com" 
     },
     {
         "Device": "Cios Fusion",
@@ -38,5 +38,5 @@ for device in devices:
         f"{icon_brochure} Brochure: [Click here]({device['Brochure']})  \n"
         f"{icon_config} Configuration: [Click here]({device['Configuration']})"
         if "Data Sheet" in device:
-            st.markdown(f"[Data Sheet]({device['Data Sheet']})")
+            st.markdown(f"[Data Sheet]({device['Data Sheet']})"
     )
