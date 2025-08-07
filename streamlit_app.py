@@ -37,14 +37,14 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([1, 2, 1])  # تقسيم الصفحة إلى 3 أعمدة بنسبة مختلفة
+col1, col2, col3, col4, col5 = st.columns([1, 1, 2, 1, 1])  # تقسيم الصفحة إلى 3 أعمدة بنسبة مختلفة
 
 # الشعار اليسار (سيمنس)
 with col1:
     st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300)
 
 # الشعار في الوسط (الكاد)
-with col2:
+with col3:
     st.image("https://iili.io/FiS0iNa.png", width=150)
 
 
