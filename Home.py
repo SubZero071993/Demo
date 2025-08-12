@@ -1,6 +1,8 @@
 import streamlit as st
 import base64
 
+st.title(" Clinical Assets Dashboard (CAD)")
+
 st.set_page_config(page_title="CAD Portal", layout="wide")
 
 
@@ -111,3 +113,16 @@ elif selected_page == "3d":
     st.write("🧊 ملفات 3D الخاصة بالجهاز")
 elif selected_page == "maintenance":
     st.write("🔧 سجل الصيانة")
+    
+
+
+# نص الفوتر تحت الصفحة
+st.markdown(
+    """
+    <div style='text-align: center; margin-top: 50px; color: gray; font-size: 14px;'>
+        Developed by <b>Hossam Al-Zahrani</b><br>
+        AT Product Manager
+    </div>
+    """,
+    unsafe_allow_html=True
+)
