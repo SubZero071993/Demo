@@ -1,128 +1,213 @@
 import streamlit as st
-import base64
 
-st.title(" Clinical Assets Dashboard (CAD)")
+# Page configuration
 
-st.set_page_config(page_title="CAD Portal", layout="wide")
+st.set_page_config(
+page_title=“Demo Device Request”,
+page_icon=“🏥”,
+layout=“centered”
+)
 
+# Custom CSS for styling
 
-# CSS for hover effect
-st.markdown("""
-    <style>
-    .circle-container {
-        display: flex;
-        justify-content: center;
-        gap: 50px;
-        margin-top: 50px;
-        flex-wrap: wrap;
-    }
-    .circle-button {
-        background-color: #FF6F00;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 150px;
-        height: 150px;
-        font-size: 18px;
+st.markdown(”””
+
+<style>
+    .main-header {
         text-align: center;
-        line-height: 1.5;
-        cursor: pointer;
-        transition: transform 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        color: #1f4e79;
+        padding: 20px 0;
+        border-bottom: 3px solid #4a90e2;
+        margin-bottom: 30px;
     }
-    .circle-button:hover {
-        transform: scale(1.2);
+    .success-message {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: center;
     }
-    </style>
-""", unsafe_allow_html=True)
+    .required-field {
+        color: red;
+        font-weight: bold;
+    }
+    .section-divider {
+        margin: 30px 0;
+        border-top: 1px solid #e0e0e0;
+        padding-top: 20px;
+    }
+</style>
 
-col1, col2, col3, col4, col5, col6, col7, col8, col9, col10 = st.columns([10, 1, 10, 1, 1, 1, 1, 1, 1, 1])  # تقسيم الصفحة إلى 10 أعمدة بنسبة مختلفة
+“””, unsafe_allow_html=True)
 
-# الشعار اليسار (سيمنس)
-with col1:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg", width=300)
+# Initialize session state
 
-# الشعار في الوسط (الكاد)
-with col3:
-    st.image("https://iili.io/FiS0iNa.png", width=300)
+if ‘form_submitted’ not in st.session_state:
+st.session_state.form_submitted = False
 
+if ‘form_data’ not in st.session_state:
+st.session_state.form_data = {}
 
-selected_page = st.session_state.get("selected_page")
+def reset_form():
+st.session_state.form_submitted = False
+st.session_state.form_data = {}
+# Clear all form inputs
+for key in st.session_state:
+if key.startswith(‘device_’) or key.startswith(‘request_’) or key.startswith(‘urgent_’):
+del st.session_state[key]
+st.rerun()
 
-# Circle buttons
-if not selected_page:
-    st.markdown("""
-        <div class="circle-container">
-            <form action="" method="post">
-                <button name="page" value="requests" class="circle-button">
-                    <img src="https://img.icons8.com/?size=100&id=64nKv4tDb3Qt&format=png&color=000000" width="60"><br>Requests
-                </button>
-            </form>
-            <form action="" method="post">
-                <button name="page" value="schedule" class="circle-button">
-                    <img src="https://img.icons8.com/?size=100&id=117507&format=png&color=000000" width="60"><br>Schedule
-                </button>
-            </form>
-            <form action="" method="post">
-                <button name="page" value="documents" class="circle-button">
-                    <img src="https://img.icons8.com/?size=100&id=42415&format=png&color=000000" width="60"><br>Documents
-                </button>
-            </form>
-            <form action="" method="post">
-                <button name="page" value="3d" class="circle-button">
-                    <img src="https://img.icons8.com/?size=100&id=5WoqJ6SAzPMX&format=png&color=000000" width="60"><br>3D
-                </button>
-            </form>
-            <form action="" method="post">
-                <button name="page" value="maintenance" class="circle-button">
-                    <img src="https://img.icons8.com/?size=100&id=102356&format=png&color=000000" width="60"><br>Maintenance
-                </button>
-            </form>
-        </div>
-    """, unsafe_allow_html=True)
+# Main header
 
-# Detect click
-if "page" in st.query_params:
-    selected_page = st.query_params["page"]
-    st.session_state["selected_page"] = selected_page
+st.markdown(’<h1 class="main-header">🏥 Demo Device Request Form</h1>’, unsafe_allow_html=True)
 
-# Example page logic
-selected_page = st.session_state.get("selected_page")
+if not st.session_state.form_submitted:
+st.markdown(“Please fill out all required fields to submit your demo device request.”)
 
-if selected_page == "schedule":
-    st.markdown("<h2>📅 جدول الأجهزة المجربة</h2>", unsafe_allow_html=True)
+```
+# Device Type Selection
+st.markdown("### Device Type <span class='required-field'>*</span>", unsafe_allow_html=True)
+device_type = st.selectbox(
+    "Select device type:",
+    options=["", "Ultrasound", "X-Ray", "C-Arm"],
+    key="device_type",
+    help="Choose the type of medical device you need for demo"
+)
+
+# Device Model Selection (conditional)
+device_model = ""
+if device_type:
+    st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
+    st.markdown("### Device Model <span class='required-field'>*</span>", unsafe_allow_html=True)
    
-    # كود الجدول اللي تبي
-    import pandas as pd
-    data = {
-        "Model": ["Cios Alpha", "Cios Select"],
-        "Delivery Date": ["2025-07-01", "2025-07-15"],
-        "Location": ["Riyadh", "Jeddah"]
-    }
-    df = pd.DataFrame(data)
-    st.dataframe(df)
+    if device_type == "Ultrasound":
+        device_model = st.selectbox(
+            "Select ultrasound model:",
+            options=["", "Ultrasound Device"],
+            key="device_model"
+        )
+    elif device_type == "X-Ray":
+        device_model = st.selectbox(
+            "Select X-Ray model:",
+            options=["", "X-Ray Device"],
+            key="device_model"
+        )
+    elif device_type == "C-Arm":
+        device_model = st.selectbox(
+            "Select C-Arm model:",
+            options=["", "Cios Connect", "Cios Fusion", "Cios Alpha VA30", "Cios Spin"],
+            key="device_model"
+        )
 
-elif selected_page == "requests":
-    st.write("📨 هنا تقدر تتابع الطلبات")
-elif selected_page == "documents":
-    st.write("📄 مستندات الجهاز")
-elif selected_page == "3d":
-    st.write("🧊 ملفات 3D الخاصة بالجهاز")
-elif selected_page == "maintenance":
-    st.write("🔧 سجل الصيانة")
-    
+# Request Reason
+st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
+st.markdown("### Request Reason <span class='required-field'>*</span>", unsafe_allow_html=True)
+request_reason = st.selectbox(
+    "Why are you requesting this demo?",
+    options=["", "Possible PO", "Demo", "Support"],
+    key="request_reason",
+    help="Select the primary reason for your demo request"
+)
 
+# Urgent Request
+st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
+st.markdown("### Urgent Request <span class='required-field'>*</span>", unsafe_allow_html=True)
+is_urgent = st.radio(
+    "Is this request urgent?",
+    options=["No", "Yes"],
+    key="is_urgent",
+    help="Select Yes if you need this demo urgently"
+)
 
-# نص الفوتر تحت الصفحة
+# Urgent Justification (conditional)
+urgent_justification = ""
+if is_urgent == "Yes":
+    st.markdown("### Urgent Justification <span class='required-field'>*</span>", unsafe_allow_html=True)
+    urgent_justification = st.text_area(
+        "Please explain why this request is urgent:",
+        key="urgent_justification",
+        help="Provide detailed justification for the urgent request",
+        placeholder="Enter the reason for urgency..."
+    )
+
+# Submit button
+st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    if st.button("🚀 Submit Request", use_container_width=True, type="primary"):
+        # Validation
+        errors = []
+       
+        if not device_type:
+            errors.append("Device type is required")
+        if not device_model:
+            errors.append("Device model is required")
+        if not request_reason:
+            errors.append("Request reason is required")
+        if not is_urgent:
+            errors.append("Please specify if the request is urgent")
+        if is_urgent == "Yes" and not urgent_justification.strip():
+            errors.append("Urgent justification is required when request is urgent")
+       
+        if errors:
+            st.error("Please fix the following errors:")
+            for error in errors:
+                st.error(f"• {error}")
+        else:
+            # Save form data and mark as submitted
+            st.session_state.form_data = {
+                'device_type': device_type,
+                'device_model': device_model,
+                'request_reason': request_reason,
+                'is_urgent': is_urgent,
+                'urgent_justification': urgent_justification if is_urgent == "Yes" else ""
+            }
+            st.session_state.form_submitted = True
+            st.rerun()
+```
+
+else:
+# Success page
+st.markdown(”””
+<div class="success-message">
+<h2>✅ Request Submitted Successfully!</h2>
+<p>Your demo device request has been received and will be processed shortly.</p>
+</div>
+“””, unsafe_allow_html=True)
+
+```
+# Display submitted data
+st.markdown("### 📋 Request Details:")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.info(f"**Device Type:** {st.session_state.form_data['device_type']}")
+    st.info(f"**Device Model:** {st.session_state.form_data['device_model']}")
+
+with col2:
+    st.info(f"**Request Reason:** {st.session_state.form_data['request_reason']}")
+    st.info(f"**Urgent Request:** {st.session_state.form_data['is_urgent']}")
+
+if st.session_state.form_data['urgent_justification']:
+    st.warning(f"**Urgent Justification:** {st.session_state.form_data['urgent_justification']}")
+
+# New request button
+st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    if st.button("📝 Submit New Request", use_container_width=True, type="secondary"):
+        reset_form()
+```
+
+# Footer
+
+st.markdown(”—”)
 st.markdown(
-    """
-    <div style='text-align: center; margin-top: 50px; color: gray; font-size: 14px;'>
-        Developed by <b>Hossam Al-Zahrani</b><br>
-        AT Product Manager
-    </div>
-    """,
-    unsafe_allow_html=True
+“<div style='text-align: center; color: #666; padding: 20px;'>”
+“Demo Device Request System | Medical Equipment Management”
+“</div>”,
+unsafe_allow_html=True
 )
