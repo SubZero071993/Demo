@@ -8,7 +8,7 @@ st.image( "https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthine
 # بيانات الأجهزة
 data = [
     ["Cios Select FD VA20", "22-07-25", 20087, "warehouse", "", ""],
-    ["Cios Connect", "25-04-25", 21521, "Al-Rawdhah Hospital (until we submit Cios Select)", "Ayman Tamimi", ""],
+    ["Cios Connect", "25-05-25", 21521, "Al-Rawdhah Hospital (until we submit Cios Select)", "Ayman Tamimi", ""],
     ["Cios Fusion", "27-07-25", 31181, "warehouse", "", ""],
     ["Cios Alpha VA20", "05-08-25", 13020, "warehouse", "", ""],
     ["Cios Alpha VA30", "03-07-25", 43815, "Aster Sanad Hospital", "Ammar", ""],
