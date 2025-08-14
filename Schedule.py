@@ -12,7 +12,7 @@ data = [
     ["Cios Fusion", "27-07-25", 31181, "warehouse", "", ""],
     ["Cios Alpha VA20", "05-08-25", 13020, "warehouse", "", ""],
     ["Cios Alpha VA30", "03-07-25", 43815, "Aster Sanad Hospital", "Ammar", ""],
-    ["Cios Spin VA30", "10-07-25", 50097, "Johns Hopkins Aramco Hospital", "Ayman Tamimi", "Ali"]
+    ["Cios Spin VA30", "12-08-25", 50097, "warehouse", "", ""]
 ]
 
 columns = [
@@ -82,4 +82,3 @@ def highlight_row(row):
 st.markdown("### 🎨 Final Results:")
 styled_df = edited_df.style.apply(highlight_row, axis=1)
 st.dataframe(styled_df, use_container_width=True)
-
